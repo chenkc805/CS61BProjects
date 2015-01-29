@@ -40,42 +40,22 @@ public class Planet {
 		return forceY;
 	}
 
-	public double calcXNetForce(Planet[] planets) {
-		int numberOfPlanets = planets.length;
-		int i = 0;
-		double netForceX = 0;
-		while (i < numberOfPlanets-1) {
-			if (this.equals(planets[i])) {
-				i = i + 1;
-			}
-			else {
-				netForceX = netForceX + this.calcPairwiseForceX(planets[i]);
-				i = i + 1;
-			}
-		}
-		this.xNetForce = netForceX;
-		return netForceX;
-	}
-
-	public double calcYNetForce(Planet[] planets) {
-		int numberOfPlanets = planets.length;
-		int i = 0;
-		double netForceY = 0;
-		while (i < numberOfPlanets-1) {
-			if (this.equals(planets[i])) {
-				i = i + 1;
-			}
-			else {
-				netForceY = netForceY + this.calcPairwiseForceY(planets[i]);
-				i = i + 1;
-			}
-		}
-		this.yNetForce = netForceY;
-		return netForceY;
-	}
-
 	public void setNetForce(Planet[] planets) {
-		this.netForce = Math.sqrt(this.calcYNetForce(planets)*this.calcYNetForce(planets) + this.calcXNetForce(planets)*this.calcXNetForce(planets));
+		int numberOfPlanets = planets.length;
+		int i = 0;
+		this.xNetForce = 0;
+		this.yNetForce = 0;
+		while (i < numberOfPlanets) {
+			if (this.equals(planets[i])) {
+				i = i + 1;
+			}
+			else {
+				this.yNetForce = this.yNetForce + this.calcPairwiseForceY(planets[i]);
+				this.xNetForce = this.xNetForce + this.calcPairwiseForceX(planets[i]);
+				i = i + 1;
+			}
+		}
+		this.netForce = Math.sqrt(this.yNetForce*this.yNetForce + this.xNetForce*this.xNetForce);
 	}
 
 	public void draw() {
