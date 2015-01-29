@@ -10,7 +10,6 @@ public class Planet {
 	public double netForce;
 	public double xAccel;
 	public double yAccel;
-	public Planet[] planets;
 
 	public Planet(double xPosition, double yPosition, double velocityX, double velocityY, double m, String image) {
 		this.x = xPosition;
@@ -76,7 +75,7 @@ public class Planet {
 	}
 
 	public void setNetForce(Planet[] planets) {
-		double netForce = Math.sqrt(this.calcYNetForce(planets)*this.calcYNetForce(planets) + this.calcXNetForce(planets)*this.calcXNetForce(planets));
+		this.netForce = Math.sqrt(this.calcYNetForce(planets)*this.calcYNetForce(planets) + this.calcXNetForce(planets)*this.calcXNetForce(planets));
 	}
 
 	public void draw() {
