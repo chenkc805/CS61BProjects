@@ -38,6 +38,7 @@ public class IntListTest {
      */
 
     //TODO:  Create testSquareListRecursive()
+<<<<<<< HEAD
     @Test
     public void testSquareListRecursive() {
       IntList L = IntList.list(1, 2, 3);
@@ -68,6 +69,12 @@ public class IntListTest {
 
     /* Run the unit tests in this file. */
     public static void main(String[] args) {
+=======
+    //TODO:  Create testDcatenate and testCatenate
+
+    /* Run the unit tests in this file. */
+    public static void main(String... args) {
+>>>>>>> 97ebda5e930db6b1fe3a92f8cf7e43430c0550d0
         jh61b.junit.textui.runClasses(IntListTest.class);
     }       
 }   

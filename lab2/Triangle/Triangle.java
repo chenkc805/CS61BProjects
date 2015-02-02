@@ -16,7 +16,11 @@ public class Triangle {
   /** Returns a String describing the type of triangle. */
   public String triangleType() {
 
+<<<<<<< HEAD
     // Check that nothing is negative
+=======
+    // Chceck that nothing is negative
+>>>>>>> 97ebda5e930db6b1fe3a92f8cf7e43430c0550d0
     if (s1 <= 0 || s2 <= 0 || s3 <= 0) {
       return "At least one length is less than 0!";
     }
@@ -28,6 +32,7 @@ public class Triangle {
 
     // Return triangle type
     //TODO:  return either "Equilateral", "Isosceles", or "Scalene"
+<<<<<<< HEAD
     if (s1 == s2 && s2 == s3) {
       return "Equilateral";
     }
@@ -38,5 +43,8 @@ public class Triangle {
     else {
       return "Scalene";
     }
+=======
+    return null; //REPLACE THIS LINE
+>>>>>>> 97ebda5e930db6b1fe3a92f8cf7e43430c0550d0
   }
 }
