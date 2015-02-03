@@ -23,7 +23,7 @@ public class Calculator {
 
             result = xSelector ^ ySelector ^ carry;
             carry = ((xSelector & ySelector) | (xSelector ^ ySelector & carry)) << 1; 
-            selector << 1;
+            selector = selector << 1;
         }
         return result;
     }
@@ -38,13 +38,13 @@ public class Calculator {
      **/
     public int multiply(int x, int y) {
         if (x < y) {
-            placeholder = x;
+            int placeholder = x;
             x = y;
             y = placeholder;
         }
-        result = 0;
+        int result = 0;
         while (y != 0) {
-            if (y & 1) {
+            if (y & 1 == 1) {
                 result = add(result, x);
             }
             else {
@@ -105,7 +105,7 @@ public class Calculator {
                 return;
             }
             else {
-                Systeml.out.println(equations.equation + " = " + Integer.toString(equations.result));
+                System.out.println(equations.equation + " = " + Integer.toString(equations.result));
                 equations = equations.next;
             }
         }
