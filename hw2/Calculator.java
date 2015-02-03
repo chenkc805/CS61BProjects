@@ -17,12 +17,12 @@ public class Calculator {
         int result = 0;
         int carry = 0; 
 
-        for (int i = 0, i < Integer.SIZE, i++) {
+        for (int i = 0; i < Integer.SIZE; i++) {
             int xSelector = x & selector;
             int ySelector = y & selector;
 
             result = xSelector ^ ySelector ^ carry;
-            carry = ((xSelector & ySelector) | (xSelector ^ ySelector & carry) << 1; 
+            carry = ((xSelector & ySelector) | (xSelector ^ ySelector & carry)) << 1; 
             selector << 1;
         }
         return result;
@@ -88,7 +88,7 @@ public class Calculator {
             length += 1;
             equations = equations.next;
         }
-        printHistory(length)
+        printHistory(length);
     }
 
     /**
@@ -100,7 +100,7 @@ public class Calculator {
      **/
     public void printHistory(int n) {
         EquationList equations = historyOfEquations;
-        for (int i = 0, i < n, i++) {
+        for (int i = 0; i < n; i++) {
             if (equations == null) {
                 return;
             }
@@ -137,9 +137,10 @@ public class Calculator {
         int finalResult = 0;
         EquationList equations = historyOfEquations;
         while (equations != null) {
-            finalResult = equations.result + finalResult
+            finalResult = equations.result + finalResult;
             equations = equations.next;
         return finalResult;
+        }
     }
 
     /**
@@ -152,8 +153,11 @@ public class Calculator {
         int finalResult = 1;
         EquationList equations = historyOfEquations;
         while (equations != null) {
-            finalResult = equations.result * finalResult
+            finalResult = equations.result * finalResult;
             equations = equations.next;
         return finalResult;
+        }
     }
 }
+
+
