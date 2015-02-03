@@ -48,8 +48,8 @@ public class Calculator {
                 result = add(result, x);
             }
             else {
-                x << 1;
-                y >> 1;
+                x = x << 1;
+                y = y >> 1;
             }
         }
         return result;
@@ -105,7 +105,7 @@ public class Calculator {
                 return;
             }
             else {
-                System.out.println(equations.equation + " = " + Integer.toString(equations.result));
+                Systeml.out.println(equations.equation + " = " + Integer.toString(equations.result));
                 equations = equations.next;
             }
         }
