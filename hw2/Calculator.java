@@ -127,7 +127,6 @@ public class Calculator {
     public int cumulativeSum() {
         int finalResult = 0;
         EquationList equations = historyOfEquations;
-        System.out.println(equations);
         while (equations != null) {
             finalResult = equations.result + finalResult;
             equations = equations.next;
