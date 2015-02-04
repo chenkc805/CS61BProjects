@@ -13,19 +13,25 @@ public class Calculator {
      * @return the sum of x and y
      **/
     public int add(int x, int y) {
-        int selector = 1;
-        int result = 0;
-        int carry = 0; 
+        // int selector = 1;
+        // int result = 0;
+        // int carry = 0; 
 
-        for (int i = 0; i < Integer.SIZE; i++) {
-            int xSelector = x & selector;
-            int ySelector = y & selector;
+        // for (int i = 0; i < Integer.SIZE; i++) {
+        //     int xSelector = x & selector;
+        //     int ySelector = y & selector;
 
-            result = xSelector ^ ySelector ^ carry;
-            carry = ((xSelector & ySelector) | (xSelector ^ ySelector & carry)) << 1; 
-            selector = selector << 1;
+        //     result = xSelector ^ ySelector ^ carry;
+        //     carry = ((xSelector & ySelector) | (xSelector ^ ySelector & carry)) << 1; 
+        //     selector = selector << 1;
+        // }
+        // return result;
+        while (y != 0) {
+            int carry = x & y;
+            x = x ^ y; 
+            y = carry << 1;
         }
-        return result;
+        return x;
     }
 
     /**
@@ -44,13 +50,11 @@ public class Calculator {
         }
         int result = 0;
         while (y != 0) {
-            if (y & 1 == 1) {
+            if ((y & 01) != 0) {
                 result = add(result, x);
             }
-            else {
-                x = x << 1;
-                y = y >> 1;
-            }
+            x = x << 1;
+            y = y >>> 1;
         }
         return result;
     }
@@ -67,7 +71,7 @@ public class Calculator {
     public void saveEquation(String equation, int result) {
         String numbers = new String("0123456789");
         if (numbers.indexOf(equation.charAt(0)) != -1) {
-            historyOfEquations.next = EquationList(equation, result, null);
+            historyOfEquations = new EquationList(equation, result, historyOfEquations);
         }
         else {
             return;
@@ -139,8 +143,8 @@ public class Calculator {
         while (equations != null) {
             finalResult = equations.result + finalResult;
             equations = equations.next;
-        return finalResult;
         }
+        return finalResult;
     }
 
     /**
@@ -155,8 +159,8 @@ public class Calculator {
         while (equations != null) {
             finalResult = equations.result * finalResult;
             equations = equations.next;
-        return finalResult;
         }
+        return finalResult;
     }
 }
 

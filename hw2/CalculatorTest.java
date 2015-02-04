@@ -27,9 +27,11 @@ public class CalculatorTest {
         assertEquals(-4, tester.add(-3,-1));
         assertEquals(-7, tester.add(-10, 3));
         assertEquals(-7, tester.add(10, -17));
+
+        assertEquals(5, tester.multiply(5,1));
         assertEquals(-170, tester.multiply(10, -17));
         assertEquals(30, tester.multiply(3, 10));
-        assertEquals(-120, tester.multiply(-30, -4));
+        assertEquals(120, tester.multiply(-30, -4));
 
     }
 
