@@ -27,9 +27,12 @@ public class CalculatorTest {
         assertEquals(-4, tester.add(-3,-1));
         assertEquals(-7, tester.add(-10, 3));
         assertEquals(-7, tester.add(10, -17));
+    }
+
+    @Test
+    public void testMultiply() {
         assertEquals(5, tester.multiply(5,1));
         assertEquals(30, tester.multiply(3, 10));
-
     }
 
     @Test
@@ -44,6 +47,18 @@ public class CalculatorTest {
         tester.undoEquation();
         assertEquals(11, tester.cumulativeProduct());
         tester.printAllHistory();
+    }
+
+    @Test
+    public void testClearHistory() {
+        int result = tester.add(5,6);
+        tester.saveEquation("5 + 6", result);
+        int result2 = tester.multiply(2,3);
+        tester.saveEquation("2 * 3", result2);
+        assertEquals(17, tester.cumulativeSum());
+        tester.clearHistory();
+        assertEquals(1, tester.cumulativeProduct());
+        assertEquals(0, tester.cumulativeSum());
     }
 
     /* Run the unit tests in this file. */
