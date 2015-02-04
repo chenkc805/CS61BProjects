@@ -13,19 +13,6 @@ public class Calculator {
      * @return the sum of x and y
      **/
     public int add(int x, int y) {
-        // int selector = 1;
-        // int result = 0;
-        // int carry = 0; 
-
-        // for (int i = 0; i < Integer.SIZE; i++) {
-        //     int xSelector = x & selector;
-        //     int ySelector = y & selector;
-
-        //     result = xSelector ^ ySelector ^ carry;
-        //     carry = ((xSelector & ySelector) | (xSelector ^ ySelector & carry)) << 1; 
-        //     selector = selector << 1;
-        // }
-        // return result;
         while (y != 0) {
             int carry = x & y;
             x = x ^ y; 
@@ -69,7 +56,7 @@ public class Calculator {
      * @param result is an integer corresponding to the result of the equation
      **/
     public void saveEquation(String equation, int result) {
-        String numbers = new String("0123456789");
+        String numbers = "0123456789";
         if (numbers.indexOf(equation.charAt(0)) != -1) {
             historyOfEquations = new EquationList(equation, result, historyOfEquations);
         }
@@ -140,6 +127,7 @@ public class Calculator {
     public int cumulativeSum() {
         int finalResult = 0;
         EquationList equations = historyOfEquations;
+        System.out.println(equations);
         while (equations != null) {
             finalResult = equations.result + finalResult;
             equations = equations.next;
