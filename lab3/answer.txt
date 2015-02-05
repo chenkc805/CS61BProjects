@@ -1,0 +1,1 @@
+The problem is that isSameNumber has to autobox the ints i and j into a and b, respectively. When the auto boxing occurs for ints over 128, then a and b point to different objects. Since “==“ compares pointers, even though the content of a and b (128) is the same, their pointers are not, which causes isSameNumber to return False. 
