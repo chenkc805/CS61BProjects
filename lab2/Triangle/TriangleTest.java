@@ -23,6 +23,7 @@ public class TriangleTest {
     @Test
     public void testEquilateral() {
 <<<<<<< HEAD
+<<<<<<< HEAD
         Triangle t = new Triangle(40,40,40);
         Triangle u = new Triangle(50,50,50);
         Triangle v = new Triangle(60,60,60);
@@ -50,6 +51,8 @@ public class TriangleTest {
     public static void main(String[] args) {
       jh61b.junit.textui.runClasses(TriangleTest.class);
 =======
+=======
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
       //TODO: FILL IN
     }
 
@@ -57,6 +60,9 @@ public class TriangleTest {
 
     public static void main(String[] args) {
       //TODO: RUN TESTS (Look in ArithmeticTest.java main method for help!)
+<<<<<<< HEAD
 >>>>>>> 97ebda5e930db6b1fe3a92f8cf7e43430c0550d0
+=======
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 }

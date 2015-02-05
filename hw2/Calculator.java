@@ -1,7 +1,10 @@
 import list.EquationList;
 
 public class Calculator {
+<<<<<<< HEAD
     public EquationList historyOfEquations = null;
+=======
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     // YOU MAY WISH TO ADD SOME FIELDS
 
     /**
@@ -13,12 +16,17 @@ public class Calculator {
      * @return the sum of x and y
      **/
     public int add(int x, int y) {
+<<<<<<< HEAD
         while (y != 0) {
             int carry = x & y;
             x = x ^ y; 
             y = carry << 1;
         }
         return x;
+=======
+        // YOUR CODE HERE
+        return -1;
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -30,6 +38,7 @@ public class Calculator {
      * @return the product of x and y
      **/
     public int multiply(int x, int y) {
+<<<<<<< HEAD
         if (x < y) {
             int placeholder = x;
             x = y;
@@ -44,6 +53,10 @@ public class Calculator {
             y = y >>> 1;
         }
         return result;
+=======
+        // YOUR CODE HERE
+        return -1;
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -56,6 +69,7 @@ public class Calculator {
      * @param result is an integer corresponding to the result of the equation
      **/
     public void saveEquation(String equation, int result) {
+<<<<<<< HEAD
         String numbers = "0123456789";
         if (numbers.indexOf(equation.charAt(0)) != -1) {
             historyOfEquations = new EquationList(equation, result, historyOfEquations);
@@ -63,6 +77,9 @@ public class Calculator {
         else {
             return;
         }
+=======
+        // YOUR CODE HERE
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -73,6 +90,7 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printAllHistory() {
+<<<<<<< HEAD
         int length = 0;
         EquationList equations = historyOfEquations;
         while (equations != null) {
@@ -80,6 +98,9 @@ public class Calculator {
             equations = equations.next;
         }
         printHistory(length);
+=======
+        // YOUR CODE HERE
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -90,6 +111,7 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printHistory(int n) {
+<<<<<<< HEAD
         EquationList equations = historyOfEquations;
         for (int i = 0; i < n; i++) {
             if (equations == null) {
@@ -100,6 +122,9 @@ public class Calculator {
                 equations = equations.next;
             }
         }
+=======
+        // YOUR CODE HERE
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }    
 
     /**
@@ -107,7 +132,11 @@ public class Calculator {
      * undoEquation() removes the most recent equation we saved to our history.
     **/
     public void undoEquation() {
+<<<<<<< HEAD
         historyOfEquations = historyOfEquations.next;
+=======
+        // YOUR CODE HERE
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -115,7 +144,11 @@ public class Calculator {
      * clearHistory() removes all entries in our history.
      **/
     public void clearHistory() {
+<<<<<<< HEAD
         historyOfEquations = null;
+=======
+        // YOUR CODE HERE
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -125,6 +158,7 @@ public class Calculator {
      * @return the sum of all of the results in history
      **/
     public int cumulativeSum() {
+<<<<<<< HEAD
         int finalResult = 0;
         EquationList equations = historyOfEquations;
         while (equations != null) {
@@ -132,6 +166,10 @@ public class Calculator {
             equations = equations.next;
         }
         return finalResult;
+=======
+        // YOUR CODE HERE
+        return -1;
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     /**
@@ -141,6 +179,7 @@ public class Calculator {
      * @return the product of all of the results in history
      **/
     public int cumulativeProduct() {
+<<<<<<< HEAD
         int finalResult = 1;
         EquationList equations = historyOfEquations;
         while (equations != null) {
@@ -152,3 +191,9 @@ public class Calculator {
 }
 
 
+=======
+        // YOUR CODE HERE
+        return -1;
+    }
+}
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f

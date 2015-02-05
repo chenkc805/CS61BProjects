@@ -15,6 +15,7 @@ public class CalculatorTest {
      **/
     @Before
     public void setUp() {
+<<<<<<< HEAD
         // tester = new StaffCalculator(); // Comment me out to test your Calculator
         tester = new Calculator();   // Un-comment me to test your Calculator
     }
@@ -60,6 +61,14 @@ public class CalculatorTest {
         assertEquals(1, tester.cumulativeProduct());
         assertEquals(0, tester.cumulativeSum());
     }
+=======
+        tester = new StaffCalculator(); // Comment me out to test your Calculator
+        // tester = new Calculator();   // Un-comment me to test your Calculator
+    }
+
+    // TASK 1: WRITE JUNIT TESTS
+    // YOUR CODE HERE
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
 
     /* Run the unit tests in this file. */
     public static void main(String... args) {
