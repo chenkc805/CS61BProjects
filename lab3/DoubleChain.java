@@ -5,7 +5,7 @@ public class DoubleChain {
 	
 	public DoubleChain(double val) {
 		/* your code here. */
-		head = null; 
+		head = new DNode(val); 
 	}
 
 	public DNode getFront() {
@@ -14,25 +14,39 @@ public class DoubleChain {
 
 	/** Returns the last item in the DoubleChain. */		
 	public DNode getBack() {
-		/* your code here */
-		return null;
+		DNode pointer = head;
+		while (pointer.next != null) {
+			pointer = pointer.next;
+		}
+		return pointer;
 	}
 	
 	/** Adds D to the front of the DoubleChain. */	
 	public void insertFront(double d) {
-		/* your code here */
+		head.prev = new DNode(null, d, head);
+		head = head.prev;
 	}
 	
 	/** Adds D to the back of the DoubleChain. */	
 	public void insertBack(double d) {
-		/* your code here */
+		DNode pointer = head;
+		while (pointer.next != null) {
+			pointer = pointer.next;
+		}
+		pointer.next = new DNode(pointer, d, null);
 	}
 	
 	/** Removes the last item in the DoubleChain and returns it. 
 	  * This is an extra challenge problem. */
 	public DNode deleteBack() {
 		/* your code here */
-		return null;
+		DNode pointer = head;
+		while (pointer.next.next != null) {
+			pointer = pointer.next;
+		}
+		DNode lastDNode = pointer.next;
+		pointer.next = null;
+		return lastDNode;
 	}
 	
 	/** Returns a string representation of the DoubleChain. 
