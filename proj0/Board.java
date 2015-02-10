@@ -10,7 +10,7 @@ public class Board {
 	public Board board;
 	private int selectedXPosition;
 	private int selectedYPosition;
-	public static boolean moved;
+	public boolean moved;
 
     /** Draws an N x N board. Adapted from:
         http://introcs.cs.princeton.edu/java/15inout/CheckerBoard.java.html
@@ -87,27 +87,27 @@ public class Board {
 		}
 		else {
 			for (int i = 0; i < N; i += 2) {
-	        	Piece pawn = new Piece(true, board, i, 0, "pawn");
+	        	Piece pawn = new Piece(true, this, i, 0, "pawn");
 	        	this.place(pawn, i, 0);
         	}
 			for (int i = 1; i < N; i += 2) {
-	        	Piece shield = new Piece(true, board, i, 1, "shield");
+	        	Piece shield = new Piece(true, this, i, 1, "shield");
 	        	this.place(shield, i, 1);
         	}
 			for (int i = 0; i < N; i += 2) {
-	        	Piece bomb = new Piece(true, board, i, 2, "bomb");
+	        	Piece bomb = new Piece(true, this, i, 2, "bomb");
 	        	this.place(bomb, i, 2);
         	}
 			for (int i = 1; i < N; i += 2) {
-	        	Piece pawn = new Piece(false, board, i, 7, "pawn");
+	        	Piece pawn = new Piece(false, this, i, 7, "pawn");
 	        	this.place(pawn, i, 7);
         	}
 			for (int i = 0; i < N; i += 2) {
-	        	Piece shield = new Piece(false, board, i, 6, "shield");
+	        	Piece shield = new Piece(false, this, i, 6, "shield");
 	        	this.place(shield, i, 6);
         	}
 			for (int i = 1; i < N; i += 2) {
-	        	Piece bomb = new Piece(false, board, i, 5, "bomb");
+	        	Piece bomb = new Piece(false, this, i, 5, "bomb");
 	        	this.place(bomb, i, 5);
         	}            	        	        	
 		}
@@ -127,7 +127,7 @@ public class Board {
 		if (startPiece == null) {
 			return false;
 		}
-		if (deltaYAbs != deltaYAbs || deltaXAbs > 2 || xFinal > 7 || yFinal > 7 || xFinal < 0 || yFinal < 0) {
+		if (deltaYAbs != deltaXAbs || deltaXAbs > 2 || xFinal > 7 || yFinal > 7 || xFinal < 0 || yFinal < 0) {
 			return false;
 		}
 		if (deltaXAbs == 1 && finalPiece == null) {
@@ -155,22 +155,21 @@ public class Board {
 	}
 	
 	public boolean canSelect(int x, int y) {
-		Piece aPiece = pieces[x][y];
+		Piece aPiece = pieceAt(x,y);
 		if (aPiece != null) {  									// There is a piece at x,y
-			if (this.turn != aPiece.side()) {					// Check if the piece is on the player's side
+			if (turn != aPiece.side()) {					// Check if the piece is on the player's side
 				return false;									//
 			}													//
 			if (selected == false) {							// Check if that square is already selected
 				return true;									//
 			}													// 
-			if (selected == true && this.moved == false) {	// Check if the player has selected a piece but has not moved it
+			if (selected == true && moved == false) {	// Check if the player has selected a piece but has not moved it
 				return true;
 			}
 		}
-		// >>>>Return to this later when you have implemented move()<<<<
 		else {
 			if (selected == true) {
-				if (this.moved == false) {
+				if (moved == false) {
 					return validMove(selectedXPosition, selectedYPosition, x,y);
 				}
 				else if (this.moved && selectedPiece.hasCaptured()) {
@@ -182,23 +181,28 @@ public class Board {
 	}
 
 	public void select(int x, int y) {
-		if (selected == true) {
-			if (canSelect(x,y)) {
+		if (selected == true && canSelect(x,y) && selectedXPosition != x) {
+			if (!moved) { 
 				selectedPiece.move(x,y);
-				this.moved = true;
-				this.pieces[selectedXPosition][selectedYPosition] = null;
-				if (selectedPiece.isBomb()) {
+				moved = true;
+				if (selectedPiece.isBomb() && selectedPiece.hasCaptured()) {
+					remove(x,y);
 					bombExplosion(x,y);
 				}
-				else {
-					this.pieces[x][y] = selectedPiece;
-					selectedXPosition = x;
-					selectedYPosition = y;
-				}
 			}
+			else if (moved && selectedPiece.hasCaptured()){
+				selectedPiece.move(x,y);
+			}
+			else {
+
+			}
+			pieces[selectedXPosition][selectedYPosition] = null;
+			pieces[x][y] = selectedPiece;
+			selectedXPosition = x;
+			selectedYPosition = y;
 		}
-		else if (pieces[x][y] != null) {
-			selectedPiece = pieces[x][y];
+		else if (pieceAt(x,y) != null && canSelect(x,y)) {
+			selectedPiece = pieceAt(x,y);
 			selected = true;
 			selectedXPosition = x;
 			selectedYPosition = y;
@@ -210,27 +214,25 @@ public class Board {
 	}
 
 	public Piece remove(int x, int y) {
-		Piece piece = pieces[x][y];
+		Piece piece = pieceAt(x,y);
 		pieces[x][y] = null;
 		return piece;
 	}
 
 	public boolean canEndTurn() {
-		if (this.moved = true) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return moved;
 	}
 
 	public void endTurn() {
-		turn = Math.abs(this.turn-1);
-		moved = false;
-		selected = false;
-		selectedPiece = null;
-		selectedXPosition = -1;
-		selectedYPosition = -1;
+		if (canEndTurn()) {
+			turn = Math.abs(this.turn-1);
+			moved = false;
+			selected = false;
+			selectedPiece = null;
+			selectedXPosition = -1;
+			selectedYPosition = -1;
+			System.out.println("End turn");
+		}
 	}
 
 	private int numberOfPieces(int team) {
@@ -256,26 +258,25 @@ public class Board {
 		int right = x+1;
 		int above = y+1;
 		int below = y-1;
-		Piece[] explosionRadius = new Piece[4];
+		remove(x,y);
 		if (intervalContains(0,8,left) && intervalContains(0,8,above)) {
-			explosionRadius[0] = pieces[left][above];
+			if (pieceAt(left,above) != null && !pieceAt(left,above).isShield()) {
+				remove(left, above);
+			}
 		}
 		if (intervalContains(0,8,right) && intervalContains(0,8,above)) {
-			explosionRadius[1] = pieces[right][above];
+			if (pieceAt(right,above) != null && !pieceAt(right,above).isShield()) {
+				remove(right, above);
+			}
 		}
 		if (intervalContains(0,8,left) && intervalContains(0,8,below)) {
-			explosionRadius[2] = pieces[left][below];
+			if (pieceAt(left,below) != null && !pieceAt(left,below).isShield()) {
+				remove(left, below);
+			}
 		}
 		if (intervalContains(0,8,right) && intervalContains(0,8,below)) {
-			explosionRadius[3] = pieces[right][below];
-		}
-		for (int i = 0; i < 4; i++) {
-			if (explosionRadius[i] != null) {
-				if (explosionRadius[i].isShield()) {
-				}
-				else {
-					explosionRadius[i] = null;
-				}
+			if (pieceAt(right,below) != null && !pieceAt(right,below).isShield()) {
+				remove(right, below);
 			}
 		}
 	}

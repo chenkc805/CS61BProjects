@@ -25,10 +25,12 @@ public class Piece {
 	}
 
 	public int side() {
-		if (isFire) {
+		if (isFire()) {
 			return 0;
 		}
-		return 1;
+		else {
+			return 1;
+		}
 	}
 
 	public boolean isKing() {
@@ -47,25 +49,26 @@ public class Piece {
 		int deltaX = x - xPosition;
 		int deltaY = y - yPosition;
 		if (Math.abs(deltaX) == 2 && Math.abs(deltaY) == 2) {
-			if (b.pieceAt(x-1, y-1).side() != this.side() && deltaX == 2 && deltaY == 2) {
+			if (b.pieceAt(x-1, y-1).side() != side() && deltaX == 2 && deltaY == 2) {
 					b.remove(x-1,y-1);
-					hasCaptured = true;
 			}
-			else if (b.pieceAt(x+1, y-1).side()-1 != this.side() && deltaX == -2 && deltaY == 2) {
+			else if (b.pieceAt(x+1, y-1).side() != this.side() && deltaX == -2 && deltaY == 2) {
 					b.remove(x+1,y-1);
-					hasCaptured = true;
 			}
-			else if (b.pieceAt(x-1, y-1).side()-1 != this.side() && deltaX == -2 && deltaY == -2) {
+			else if (b.pieceAt(x-1, y-1).side() != this.side() && deltaX == -2 && deltaY == -2) {
 					b.remove(x+1,y+1);
-					hasCaptured = true;
 			}
-			else if (b.pieceAt(x-1, y-1).side()-1 != this.side() && deltaX == 2 && deltaY == -2) {
+			else if (b.pieceAt(x-1, y-1).side() != this.side() && deltaX == 2 && deltaY == -2) {
 					b.remove(x-1,y+1);
-					hasCaptured = true;
 			}
+			xPosition = x;
+			yPosition = y;
+			hasCaptured = true;
 		}
-		this.xPosition = x;
-		this.yPosition = y;
+		else if (Math.abs(deltaX) == 1 && Math.abs(deltaY) == 1) {
+			xPosition = x;
+			yPosition = y;
+		}
 	}
 
 	public boolean hasCaptured() {
