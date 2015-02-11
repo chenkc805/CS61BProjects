@@ -16,10 +16,7 @@ public class TestBoard {
     public void testCanSelect() {
     	Board board = new Board(true);
     	board.place(tester, 0,0);
-        assertEquals(false, board.selected);
         board.select(0,0);
-        assertEquals(true, board.selected);
-        assertEquals(tester, board.selectedPiece);
     	assertEquals(true, board.canSelect(1,1));
         board.select(1,1);
     	tester.move(1, 1);
@@ -47,29 +44,28 @@ public class TestBoard {
 
     @Test
     public void testSelect() {
-        board.turn = 0;
     	board.place(tester,1,1);
         board.place(oppTester, 0,0);
         assertEquals(true, board.canSelect(1,1));
         assertEquals(false, board.canSelect(0,0));
+        board.select(1,1);
+        board.select(2,2);
+        assertEquals(tester, board.pieceAt(2,2));
     }
 
     @Test
     public void testEndTurn() {
         board.place(tester, 0,0);
         board.select(0,0);
+        assertFalse(board.canEndTurn());
         board.select(1,1);
         tester.move(1, 1);
-        assertEquals(true, board.moved);
+        assertTrue(board.canEndTurn());
         board.endTurn();
-        assertEquals(false, board.moved);
-        assertEquals(null, board.selectedPiece);
-        assertEquals(1, board.turn);
     }
 
     @Test
     public void testWinner() {
-        board.turn = 0;
         board.place(tester,0,0);
         board.place(oppTester, 1,1);
         board.select(0,0);
@@ -77,8 +73,6 @@ public class TestBoard {
         board.remove(1,1);
         assertEquals("Fire", board.winner());
     }
-
-
 
     public static void main(String[] args) {
         jh61b.junit.textui.runClasses(TestBoard.class);

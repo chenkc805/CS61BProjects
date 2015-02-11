@@ -1,22 +1,31 @@
 /* Class for the board in a Checkers game for Proj0, Spring 2015 CS61B
  * @author Kevin Chen
+ *
+ * What to fix: 
+ * King movement
+ * Bomb should remove itself when it captures anoter piece
+ * Multicapture
+ * Check 3 different outcomes for winners
+ *
+ *
+ *
  */
 
 public class Board { 
-	public int turn;
-	private static Piece[][] pieces;
-	public static boolean selected;
-	public static Piece selectedPiece;
-	public Board board;
+	private int turn;
+	private Piece[][] pieces;
+	private boolean selected;
+	private Piece selectedPiece;
 	private int selectedXPosition;
 	private int selectedYPosition;
-	public boolean moved;
+	private boolean moved;
+	private boolean exploded;
 
     /** Draws an N x N board. Adapted from:
         http://introcs.cs.princeton.edu/java/15inout/CheckerBoard.java.html
      */
 
-    private static void drawBoard(int N) {
+    private void drawBoard(int N) {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if ((i + j) % 2 == 0) StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
@@ -27,24 +36,54 @@ public class Board {
                 	Piece aPiece = pieces[i][j];
                 	if (aPiece.isFire()) {
 	                	if (aPiece.isBomb()) {
-	                		StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire.png", 1, 1);	
+	                		if (aPiece.isKing()) {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire-crowned.png", 1, 1);	
+	                		}
+	                		else {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire.png", 1, 1);	
+	                		}	
 	                	}
 	                	else if (aPiece.isShield()) {
-	                		StdDrawPlus.picture(i + .5, j + .5, "img/shield-fire.png", 1, 1);	
+	                		if (aPiece.isKing()) {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/shield-fire-crowned.png", 1, 1);	
+	                		}
+	                		else {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/shield-fire.png", 1, 1);	
+	                		}
 	                	}
 	                	else {
-	                		StdDrawPlus.picture(i + .5, j + .5, "img/pawn-fire.png", 1, 1);	
+	                		if (aPiece.isKing()) {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/pawn-fire-crowned.png", 1, 1);	
+	                		}
+	                		else {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/pawn-fire.png", 1, 1);	
+	                		}
 	                	}
 	                }           
 	                else if (!aPiece.isFire()) {
 	                	if (aPiece.isBomb()) {
-	                		StdDrawPlus.picture(i + .5, j + .5, "img/bomb-water.png", 1, 1);	
+	                		if (aPiece.isKing()) {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/bomb-water-crowned.png", 1, 1);	
+	                		}	                		
+	                		else {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/bomb-water.png", 1, 1);	
+	                		}
 	                	}
 	                	else if (aPiece.isShield()) {
-	                		StdDrawPlus.picture(i + .5, j + .5, "img/shield-water.png", 1, 1);	
+	                		if (aPiece.isKing()) {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/shield-water-crowned.png", 1, 1);	
+	                		}
+	                		else {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/shield-water.png", 1, 1);	
+	                		}
 	                	}
 	                	else {
-	                		StdDrawPlus.picture(i + .5, j + .5, "img/pawn-water.png", 1, 1);	
+	                		if (aPiece.isKing()) {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/pawn-water-crowned.png", 1, 1);	
+	                		}
+	                		else {
+	                			StdDrawPlus.picture(i + .5, j + .5, "img/pawn-water.png", 1, 1);
+	                		}	
 	                	}             	 	
                     }	
                 }
@@ -61,7 +100,7 @@ public class Board {
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
         while(true) {
-            drawBoard(N);
+            board.drawBoard(N);
             if (StdDrawPlus.mousePressed()) {
                 double x = StdDrawPlus.mouseX();
                 double y = StdDrawPlus.mouseY();
@@ -130,40 +169,67 @@ public class Board {
 		if (deltaYAbs != deltaXAbs || deltaXAbs > 2 || xFinal > 7 || yFinal > 7 || xFinal < 0 || yFinal < 0) {
 			return false;
 		}
+		// if (startPiece.isKing() || startPiece.isFire()) {
+		// 	if (deltaXAbs == 2 && finalPiece == null) {
+		// 		if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == 2) {
+		// 			return true;
+		// 		}
+		// 		else if (pieceAt(xFinal+1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == 2) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	else if (deltaY == 1 && finalPiece == null) {
+		// 		return true;
+		// 	}
+
+		// if (startPiece.isKing() || !startPiece.isFire()) {
+		// 	if (deltaXAbs == 2 && finalPiece == null) {
+		// 		if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == -2) {
+		// 			return true;
+		// 		}
+		// 		else if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == -2) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	else if (deltaY == -1 && finalPiece == null) {
+		// 		return true;
+		// 	}
+		// }
+
 		if (deltaXAbs == 1 && finalPiece == null) {
 			return true;
 		}
 		if (deltaXAbs == 2 && finalPiece == null) {
 			if (startPiece.isKing() || startPiece.isFire()) {
-				if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == 2) {
+				if (pieceAt(xFinal-1, yFinal-1) != null && pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == 2) {
 					return true;
 				}
-				else if (pieceAt(xFinal+1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == 2) {
+				else if (pieceAt(xFinal+1, yFinal-1) != null && pieceAt(xFinal+1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == 2) {
 					return true;
 				}
 			}
 			if (startPiece.isKing() || !startPiece.isFire()) {
-				if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == -2) {
+				if (pieceAt(xFinal+1, yFinal+1) != null && pieceAt(xFinal+1, yFinal+1).side() != startPiece.side() && deltaX == -2 && deltaY == -2) {
 					return true;
 				}
-				else if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == -2) {
+				else if (pieceAt(xFinal-1, yFinal+1) != null && pieceAt(xFinal-1, yFinal+1).side() != startPiece.side() && deltaX == 2 && deltaY == -2) {
 					return true;
 				}
 			}
 		}
-		return false;
+			return false;
 	}
 	
 	public boolean canSelect(int x, int y) {
 		Piece aPiece = pieceAt(x,y);
 		if (aPiece != null) {  									// There is a piece at x,y
-			if (turn != aPiece.side()) {					// Check if the piece is on the player's side
+			if (turn != aPiece.side()) {						// Check if the piece is on the player's side
 				return false;									//
 			}													//
 			if (selected == false) {							// Check if that square is already selected
 				return true;									//
 			}													// 
-			if (selected == true && moved == false) {	// Check if the player has selected a piece but has not moved it
+			if (selected == true && moved == false) {			// Check if the player has selected a piece but has not moved it
 				return true;
 			}
 		}
@@ -181,27 +247,27 @@ public class Board {
 	}
 
 	public void select(int x, int y) {
-		if (selected == true && canSelect(x,y) && selectedXPosition != x) {
+		if (selected == true && canSelect(x,y) && selectedXPosition != x && pieceAt(x,y) == null) {
 			if (!moved) { 
 				selectedPiece.move(x,y);
 				moved = true;
 				if (selectedPiece.isBomb() && selectedPiece.hasCaptured()) {
-					remove(x,y);
 					bombExplosion(x,y);
 				}
 			}
 			else if (moved && selectedPiece.hasCaptured()){
 				selectedPiece.move(x,y);
 			}
-			else {
-
-			}
 			pieces[selectedXPosition][selectedYPosition] = null;
 			pieces[x][y] = selectedPiece;
 			selectedXPosition = x;
 			selectedYPosition = y;
+			if (exploded) {
+				remove(x,y);
+			}
 		}
 		else if (pieceAt(x,y) != null && canSelect(x,y)) {
+			System.out.println("you");
 			selectedPiece = pieceAt(x,y);
 			selected = true;
 			selectedXPosition = x;
@@ -228,6 +294,8 @@ public class Board {
 			turn = Math.abs(this.turn-1);
 			moved = false;
 			selected = false;
+			exploded = false;
+			selectedPiece.doneCapturing();
 			selectedPiece = null;
 			selectedXPosition = -1;
 			selectedYPosition = -1;
@@ -258,7 +326,6 @@ public class Board {
 		int right = x+1;
 		int above = y+1;
 		int below = y-1;
-		remove(x,y);
 		if (intervalContains(0,8,left) && intervalContains(0,8,above)) {
 			if (pieceAt(left,above) != null && !pieceAt(left,above).isShield()) {
 				remove(left, above);
@@ -279,27 +346,31 @@ public class Board {
 				remove(right, below);
 			}
 		}
+		exploded = true;
 	}
 
 	public String winner() {
-		if (turn == 0) { 
-			if (this.numberOfPieces(1) == 0) {
-				if (this.numberOfPieces(0) == 0) {
-					return "No one";
-				}
-					return "Fire";
-			}
-				return null;
-		}
-		else {
-			if (this.numberOfPieces(0) == 0) {
+		if (canEndTurn()) {
+			if (turn == 0) { 
 				if (this.numberOfPieces(1) == 0) {
-					return "No one";
+					if (this.numberOfPieces(0) == 0) {
+						return "No one";
+					}
+						return "Fire";
 				}
-					return "Water";
-			}
 				return null;
+			}
+			else {
+				if (this.numberOfPieces(0) == 0) {
+					if (this.numberOfPieces(1) == 0) {
+						return "No one";
+					}
+						return "Water";
+				}
+				return null;
+			}
 		}
+		return null;
 	}
 
 

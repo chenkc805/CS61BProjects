@@ -10,6 +10,8 @@ public class TestPiece {
 	public Board board = new Board(true);
 	public Piece tester = new Piece(true, board, 0, 0, "pawn");
 	public Piece oppTester = new Piece(false, board, 1, 1, "pawn");
+    public Piece bombTester = new Piece(true, board, 3, 3, "bomb");
+    public Piece shieldTester = new Piece(true, board, 4, 4, "shield");
     /** Tests the constructor of DoubleChain */
 
     @Test
@@ -18,7 +20,6 @@ public class TestPiece {
         board.select(0,0);
     	assertEquals(null, board.pieceAt(1,1));
         board.select(1,1);
-    	tester.move(1, 1);
     	assertEquals(false, tester.hasCaptured());
     	assertEquals(tester, board.pieceAt(1,1));
     }
@@ -35,18 +36,15 @@ public class TestPiece {
     }
 
     @Test
-    public void testIsKing() {
-    	assertEquals(false, tester.isKing());
-    }
-
-    @Test
     public void testIsBomb() {
-    	assertEquals(false, tester.isBomb());
+    	assertFalse(tester.isBomb());
+        assertTrue(bombTester.isBomb());
     }
 
     @Test
     public void testIsShield() {
-    	assertEquals(false, tester.isShield());
+        assertFalse(oppTester.isShield());
+        assertTrue(shieldTester.isShield());
     }
 
     @Test
@@ -54,21 +52,26 @@ public class TestPiece {
     	assertEquals(false, tester.hasCaptured());
     }
 
-
-    // @Test
-    // public void testCapture() {
-    // 	Board board = new Board(true);
-    // 	board.place(tester, 0,0);
-    // 	board.place(oppTester, 1, 1);
-    // 	tester.move(2,2);
-    // 	assertEquals(true, tester.hasCaptured());
-    // 	assertEquals(null, board.pieceAt(1,1));
-    // }
-
-    /** Tests some basic DoubleChain operations. */
     @Test
-    public void testBasicOperations() {
+    public void testIsKing() {
+        board.place(tester, 4, 6);
+        assertFalse(tester.isKing());
+        board.select(4,6);
+        board.select(5,7);
+        assertTrue(tester.isKing());
+    }
 
+    @Test
+    public void testCapture() {
+    	board.place(tester, 0,0);
+        assertEquals(tester, board.pieceAt(0,0));
+    	board.place(oppTester, 1, 1);
+        assertEquals(oppTester, board.pieceAt(1,1));
+    	board.select(0,0);
+        board.select(2,2);
+    	assertEquals(true, tester.hasCaptured());
+        assertEquals(tester, board.pieceAt(2,2));
+    	assertEquals(null, board.pieceAt(1,1));
     }
 
     public static void main(String[] args) {

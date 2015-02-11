@@ -46,19 +46,20 @@ public class Piece {
 	}
 
 	public void move(int x, int y) {
+		System.out.println("move");
 		int deltaX = x - xPosition;
 		int deltaY = y - yPosition;
 		if (Math.abs(deltaX) == 2 && Math.abs(deltaY) == 2) {
-			if (b.pieceAt(x-1, y-1).side() != side() && deltaX == 2 && deltaY == 2) {
+			if (b.pieceAt(x-1, y-1) != null && b.pieceAt(x-1, y-1).side() != side() && deltaX == 2 && deltaY == 2) {
 					b.remove(x-1,y-1);
 			}
-			else if (b.pieceAt(x+1, y-1).side() != this.side() && deltaX == -2 && deltaY == 2) {
+			else if (b.pieceAt(x+1, y-1) != null && b.pieceAt(x+1, y-1).side() != this.side() && deltaX == -2 && deltaY == 2) {
 					b.remove(x+1,y-1);
 			}
-			else if (b.pieceAt(x-1, y-1).side() != this.side() && deltaX == -2 && deltaY == -2) {
+			else if (b.pieceAt(x+1, y+1) != null && b.pieceAt(x+1, y+1).side() != this.side() && deltaX == -2 && deltaY == -2) {
 					b.remove(x+1,y+1);
 			}
-			else if (b.pieceAt(x-1, y-1).side() != this.side() && deltaX == 2 && deltaY == -2) {
+			else if (b.pieceAt(x-1, y+1) != null && b.pieceAt(x-1, y+1).side() != this.side() && deltaX == 2 && deltaY == -2) {
 					b.remove(x-1,y+1);
 			}
 			xPosition = x;
@@ -68,6 +69,9 @@ public class Piece {
 		else if (Math.abs(deltaX) == 1 && Math.abs(deltaY) == 1) {
 			xPosition = x;
 			yPosition = y;
+		}
+		if ((isFire() && y == 7) || (!isFire() && y == 0)) {
+			crowned = true;
 		}
 	}
 
