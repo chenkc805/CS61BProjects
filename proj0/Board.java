@@ -170,35 +170,13 @@ public class Board {
 		if (deltaYAbs != deltaXAbs || deltaXAbs > 2 || xFinal > 7 || yFinal > 7 || xFinal < 0 || yFinal < 0) {
 			return false;
 		}
-		// if (startPiece.isKing() || startPiece.isFire()) {
-		// 	if (deltaXAbs == 2 && finalPiece == null) {
-		// 		if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == 2) {
-		// 			return true;
-		// 		}
-		// 		else if (pieceAt(xFinal+1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == 2) {
-		// 			return true;
-		// 		}
-		// 	}
-		// 	else if (deltaY == 1 && finalPiece == null) {
-		// 		return true;
-		// 	}
-
-		// if (startPiece.isKing() || !startPiece.isFire()) {
-		// 	if (deltaXAbs == 2 && finalPiece == null) {
-		// 		if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == -2) {
-		// 			return true;
-		// 		}
-		// 		else if (pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == -2) {
-		// 			return true;
-		// 		}
-		// 	}
-		// 	else if (deltaY == -1 && finalPiece == null) {
-		// 		return true;
-		// 	}
-		// }
-
 		if (deltaXAbs == 1 && finalPiece == null) {
-			return true;
+			if (startPiece.hasCaptured()) {
+				return false;
+			}
+			else {
+				return true;
+			}
 		}
 		if (deltaXAbs == 2 && finalPiece == null) {
 			if (startPiece.isKing() || startPiece.isFire() || startPiece.hasCaptured()) {
@@ -218,7 +196,7 @@ public class Board {
 				}
 			}
 		}
-			return false;
+		return false;
 	}
 	
 	public boolean canSelect(int x, int y) {
@@ -251,14 +229,14 @@ public class Board {
 		if (selected == true && canSelect(x,y) && selectedXPosition != x && pieceAt(x,y) == null) {
 			if (!moved) { 
 				selectedPiece.move(x,y);
-				moved = true;
 				if (selectedPiece.isBomb() && selectedPiece.hasCaptured()) {
 					bombExplosion(x,y);
 				}
 			}
-			else if (moved && selectedPiece.hasCaptured()){
+			else if (moved && selectedPiece.hasCaptured() && Math.abs(selectedXPosition-x) == 2){
 				selectedPiece.move(x,y);
 			}
+			moved = true;
 			pieces[selectedXPosition][selectedYPosition] = null;
 			pieces[x][y] = selectedPiece;
 			selectedXPosition = x;

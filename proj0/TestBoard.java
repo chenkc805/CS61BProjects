@@ -9,6 +9,9 @@ public class TestBoard {
 
 	public Board board = new Board(true);
 	public Piece tester = new Piece(true, board, 0, 0, "pawn");
+    public Piece oppTester0 = new Piece(false, board, 3, 3, "pawn");
+    public Piece oppTester1 = new Piece(false, board, 5, 3, "pawn");
+    public Piece oppTester2 = new Piece(false, board, 0, 0, "pawn");
 	public Piece oppTester = new Piece(false, board, 1, 1, "pawn");
     /** Tests the constructor of DoubleChain */
 
@@ -72,6 +75,22 @@ public class TestBoard {
         board.select(2,2);
         board.remove(1,1);
         assertEquals("Fire", board.winner());
+    }
+
+    @Test
+    public void testMultiCapture() {
+        board.place(tester,0,0);
+        board.place(oppTester,1,1);
+        board.place(oppTester0,3,3);
+        board.place(oppTester1,5,3);
+        board.select(0,0);
+        board.select(2,2);
+        board.select(4,4);
+        board.select(6,2);
+        assertNull(board.pieceAt(1,1));
+        assertNull(board.pieceAt(3,3));
+        assertNull(board.pieceAt(5,3));
+
     }
 
     public static void main(String[] args) {
