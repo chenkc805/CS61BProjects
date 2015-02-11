@@ -30,6 +30,7 @@ public class Board {
             for (int j = 0; j < N; j++) {
                 if ((i + j) % 2 == 0) StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
                 else                  StdDrawPlus.setPenColor(StdDrawPlus.RED);
+                if (i == selectedXPosition && j == selectedYPosition) StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
                 StdDrawPlus.filledSquare(i + .5, j + .5, .5);
                 StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
                 if (pieces[i][j] != null) {
@@ -200,7 +201,7 @@ public class Board {
 			return true;
 		}
 		if (deltaXAbs == 2 && finalPiece == null) {
-			if (startPiece.isKing() || startPiece.isFire()) {
+			if (startPiece.isKing() || startPiece.isFire() || startPiece.hasCaptured()) {
 				if (pieceAt(xFinal-1, yFinal-1) != null && pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == 2) {
 					return true;
 				}
@@ -208,7 +209,7 @@ public class Board {
 					return true;
 				}
 			}
-			if (startPiece.isKing() || !startPiece.isFire()) {
+			if (startPiece.isKing() || !startPiece.isFire() || startPiece.hasCaptured()) {
 				if (pieceAt(xFinal+1, yFinal+1) != null && pieceAt(xFinal+1, yFinal+1).side() != startPiece.side() && deltaX == -2 && deltaY == -2) {
 					return true;
 				}
@@ -238,7 +239,7 @@ public class Board {
 				if (moved == false) {
 					return validMove(selectedXPosition, selectedYPosition, x,y);
 				}
-				else if (this.moved && selectedPiece.hasCaptured()) {
+				else if (moved && selectedPiece.hasCaptured()) {
 					return validMove(selectedXPosition, selectedYPosition, x,y);
 				}	
 			}
@@ -350,30 +351,19 @@ public class Board {
 	}
 
 	public String winner() {
-		if (canEndTurn()) {
-			if (turn == 0) { 
-				if (this.numberOfPieces(1) == 0) {
-					if (this.numberOfPieces(0) == 0) {
-						return "No one";
-					}
-						return "Fire";
-				}
-				return null;
-			}
-			else {
-				if (this.numberOfPieces(0) == 0) {
-					if (this.numberOfPieces(1) == 0) {
-						return "No one";
-					}
-						return "Water";
-				}
-				return null;
-			}
+		if (numberOfPieces(1) == 0 && numberOfPieces(0) == 0) {
+			return "No one";
 		}
-		return null;
+		else if (numberOfPieces(1) == 0) {
+			return "Fire";
+		}
+		else if (numberOfPieces(0) == 0) {
+			return "Water";
+		}
+		else {
+			return null;
+		}
 	}
-
-
 
 
 
