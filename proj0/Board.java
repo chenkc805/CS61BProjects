@@ -13,13 +13,21 @@
 
 public class Board { 
 	private int turn;
+	private int N;
 	private Piece[][] pieces;
 	private boolean selected;
 	private Piece selectedPiece;
 	private int selectedXPosition;
 	private int selectedYPosition;
 	private boolean moved;
-	private boolean exploded;
+	// public Piece tester = new Piece(true, this, 0, 0, "shield");
+ //    public Piece tester0 = new Piece(true, this, 1, 1, "pawn");
+ //    public Piece tester1 = new Piece(true, this, 1, 1, "pawn");
+ //    public Piece oppTester0 = new Piece(false, this, 3, 3, "pawn");
+ //    public Piece bomb = new Piece(false, this, 2, 2, "bomb");
+ //    public Piece oppTester1 = new Piece(false, this, 5, 3, "pawn");
+ //    public Piece oppTester2 = new Piece(false, this, 0, 0, "pawn");
+	// public Piece oppTester = new Piece(false, this, 1, 1, "pawn");
 
     /** Draws an N x N board. Adapted from:
         http://introcs.cs.princeton.edu/java/15inout/CheckerBoard.java.html
@@ -105,17 +113,22 @@ public class Board {
             if (StdDrawPlus.mousePressed()) {
                 double x = StdDrawPlus.mouseX();
                 double y = StdDrawPlus.mouseY();
-                board.select((int) x, (int) y);
+                if (board.canSelect((int) x, (int) y)) {
+                	board.select((int) x, (int) y);
+                }
             }
             if (StdDrawPlus.isSpacePressed() && board.canEndTurn()){
             	board.endTurn();
-            }      
+            }
+            if (board.winner() != null) {
+            	System.out.println(board.winner());
+            }
             StdDrawPlus.show(100);
         }
     }
 
 	public Board(boolean shouldBeEmpty) {
-		int N = 8;
+		this.N = 8;
 		this.pieces = new Piece[N][N];
 		this.turn = 0;
 		this.selected = false;
@@ -123,9 +136,7 @@ public class Board {
 		this.moved = false;
 		this.selectedXPosition = -1;
 		this.selectedYPosition = -1;
-		if (shouldBeEmpty) {
-		}
-		else {
+		if (!shouldBeEmpty) {
 			for (int i = 0; i < N; i += 2) {
 	        	Piece pawn = new Piece(true, this, i, 0, "pawn");
 	        	this.place(pawn, i, 0);
@@ -171,6 +182,12 @@ public class Board {
 			return false;
 		}
 		if (deltaXAbs == 1 && finalPiece == null) {
+			if (startPiece.isFire() && !startPiece.isKing() && deltaY == -1) {
+				return false;
+			}
+			if (!startPiece.isFire() && !startPiece.isKing() && deltaY == 1) {
+				return false;
+			}
 			if (startPiece.hasCaptured()) {
 				return false;
 			}
@@ -180,18 +197,18 @@ public class Board {
 		}
 		if (deltaXAbs == 2 && finalPiece == null) {
 			if (startPiece.isKing() || startPiece.isFire() || startPiece.hasCaptured()) {
-				if (pieceAt(xFinal-1, yFinal-1) != null && pieceAt(xFinal-1, yFinal-1).side() != startPiece.side() && deltaX == 2 && deltaY == 2) {
+				if (deltaX == 2 && deltaY == 2 && xFinal != 0 && yFinal != 0 && pieceAt(xFinal - 1, yFinal - 1) != null && pieceAt(xFinal-1, yFinal-1).side() != startPiece.side()) {
 					return true;
 				}
-				else if (pieceAt(xFinal+1, yFinal-1) != null && pieceAt(xFinal+1, yFinal-1).side() != startPiece.side() && deltaX == -2 && deltaY == 2) {
+				else if (deltaX == -2 && deltaY == 2 && xFinal != N && yFinal != 0 && pieceAt(xFinal + 1, yFinal - 1) != null && pieceAt(xFinal+1, yFinal-1).side() != startPiece.side()) {
 					return true;
 				}
 			}
 			if (startPiece.isKing() || !startPiece.isFire() || startPiece.hasCaptured()) {
-				if (pieceAt(xFinal+1, yFinal+1) != null && pieceAt(xFinal+1, yFinal+1).side() != startPiece.side() && deltaX == -2 && deltaY == -2) {
+				if (deltaX == -2 && deltaY == -2 && xFinal != N && yFinal != N && pieceAt(xFinal + 1, yFinal + 1) != null && pieceAt(xFinal+1, yFinal+1).side() != startPiece.side()) {
 					return true;
 				}
-				else if (pieceAt(xFinal-1, yFinal+1) != null && pieceAt(xFinal-1, yFinal+1).side() != startPiece.side() && deltaX == 2 && deltaY == -2) {
+				else if (deltaX == 2 && deltaY == -2 && xFinal != 0 && yFinal != N && pieceAt(xFinal - 1, yFinal + 1) != null && pieceAt(xFinal-1, yFinal+1).side() != startPiece.side()) {
 					return true;
 				}
 			}
@@ -209,6 +226,7 @@ public class Board {
 				return true;									//
 			}													// 
 			if (selected == true && moved == false) {			// Check if the player has selected a piece but has not moved it
+				selected = false;
 				return true;
 			}
 		}
@@ -226,32 +244,16 @@ public class Board {
 	}
 
 	public void select(int x, int y) {
-		if (selected == true && canSelect(x,y) && selectedXPosition != x && pieceAt(x,y) == null) {
-			if (!moved) { 
-				selectedPiece.move(x,y);
-				if (selectedPiece.isBomb() && selectedPiece.hasCaptured()) {
-					bombExplosion(x,y);
-				}
-			}
-			else if (moved && selectedPiece.hasCaptured() && Math.abs(selectedXPosition-x) == 2){
-				selectedPiece.move(x,y);
-			}
+		if (selected == true) {
+			selectedPiece.move(x,y);
 			moved = true;
-			pieces[selectedXPosition][selectedYPosition] = null;
-			pieces[x][y] = selectedPiece;
-			selectedXPosition = x;
-			selectedYPosition = y;
-			if (exploded) {
-				remove(x,y);
-			}
 		}
-		else if (pieceAt(x,y) != null && canSelect(x,y)) {
-			System.out.println("you");
+		else {
 			selectedPiece = pieceAt(x,y);
 			selected = true;
-			selectedXPosition = x;
-			selectedYPosition = y;
 		}
+		selectedXPosition = x;
+		selectedYPosition = y;
 	}
 
 	public void place(Piece p, int x, int y) {
@@ -273,12 +275,10 @@ public class Board {
 			turn = Math.abs(this.turn-1);
 			moved = false;
 			selected = false;
-			exploded = false;
 			selectedPiece.doneCapturing();
 			selectedPiece = null;
 			selectedXPosition = -1;
 			selectedYPosition = -1;
-			System.out.println("End turn");
 		}
 	}
 
@@ -294,38 +294,6 @@ public class Board {
             }
 		}
 		return count;
-	}
-
-	private boolean intervalContains(int low, int high, int n) {
-    	return n >= low && n < high;
-	}
-
-	private void bombExplosion(int x,int y) {
-		int left = x-1;
-		int right = x+1;
-		int above = y+1;
-		int below = y-1;
-		if (intervalContains(0,8,left) && intervalContains(0,8,above)) {
-			if (pieceAt(left,above) != null && !pieceAt(left,above).isShield()) {
-				remove(left, above);
-			}
-		}
-		if (intervalContains(0,8,right) && intervalContains(0,8,above)) {
-			if (pieceAt(right,above) != null && !pieceAt(right,above).isShield()) {
-				remove(right, above);
-			}
-		}
-		if (intervalContains(0,8,left) && intervalContains(0,8,below)) {
-			if (pieceAt(left,below) != null && !pieceAt(left,below).isShield()) {
-				remove(left, below);
-			}
-		}
-		if (intervalContains(0,8,right) && intervalContains(0,8,below)) {
-			if (pieceAt(right,below) != null && !pieceAt(right,below).isShield()) {
-				remove(right, below);
-			}
-		}
-		exploded = true;
 	}
 
 	public String winner() {
