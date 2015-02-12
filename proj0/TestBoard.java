@@ -9,7 +9,9 @@ public class TestBoard {
 
 	public Board board = new Board(true);
 	public Piece tester = new Piece(true, board, 0, 0, "pawn");
+    public Piece tester0 = new Piece(true, board, 1, 1, "pawn");
     public Piece oppTester0 = new Piece(false, board, 3, 3, "pawn");
+    public Piece bomb = new Piece(false, board, 3, 3, "bomb");
     public Piece oppTester1 = new Piece(false, board, 5, 3, "pawn");
     public Piece oppTester2 = new Piece(false, board, 0, 0, "pawn");
 	public Piece oppTester = new Piece(false, board, 1, 1, "pawn");
@@ -17,13 +19,11 @@ public class TestBoard {
 
     @Test
     public void testCanSelect() {
-    	Board board = new Board(true);
     	board.place(tester, 0,0);
         board.select(0,0);
-    	assertEquals(true, board.canSelect(1,1));
+    	assertTrue(board.canSelect(1,1));
         board.select(1,1);
-    	tester.move(1, 1);
-    	assertEquals(false, tester.hasCaptured());
+    	assertFalse(tester.hasCaptured());
     	assertEquals(tester, board.pieceAt(1,1));
     }
 
@@ -71,10 +71,38 @@ public class TestBoard {
     public void testWinner() {
         board.place(tester,0,0);
         board.place(oppTester, 1,1);
+        assertNull(board.winner());
         board.select(0,0);
         board.select(2,2);
-        board.remove(1,1);
         assertEquals("Fire", board.winner());
+    }
+
+    @Test
+    public void testWaterWinner() {
+        board.place(tester0,1,1);
+        board.place(oppTester0,3,3);
+        board.select(1,1);
+        board.select(2,2);
+        board.endTurn();
+        board.select(3,3);
+        board.select(1,1);
+        assertEquals(oppTester0, board.pieceAt(1,1));
+        assertNull(board.pieceAt(2,2));
+        assertEquals("Water", board.winner());
+    }
+
+    @Test
+    public void testBombWinner() {
+        board.place(tester0,1,1);
+        board.place(bomb,3,3);
+        board.select(1,1);
+        board.select(2,2);
+        board.endTurn();
+        board.select(3,3);
+        board.select(1,1);
+        assertNull(board.pieceAt(1,1));
+        assertNull(board.pieceAt(2,2));
+        assertEquals("No one", board.winner());
     }
 
     @Test

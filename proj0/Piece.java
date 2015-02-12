@@ -46,33 +46,65 @@ public class Piece {
 	}
 
 	public void move(int x, int y) {
-		System.out.println("move");
 		int deltaX = x - xPosition;
 		int deltaY = y - yPosition;
 		if (Math.abs(deltaX) == 2 && Math.abs(deltaY) == 2) {
-			if (b.pieceAt(x-1, y-1) != null && b.pieceAt(x-1, y-1).side() != side() && deltaX == 2 && deltaY == 2) {
+			if (deltaX == 2 && deltaY == 2 && x != 0 && y != 0 && b.pieceAt(x-1, y-1) != null && b.pieceAt(x-1, y-1).side() != side()) {
 					b.remove(x-1,y-1);
 			}
-			else if (b.pieceAt(x+1, y-1) != null && b.pieceAt(x+1, y-1).side() != this.side() && deltaX == -2 && deltaY == 2) {
+			else if (deltaX == -2 && deltaY == 2 && y != 0 &&  b.pieceAt(x+1, y-1) != null && b.pieceAt(x+1, y-1).side() != this.side()) {
 					b.remove(x+1,y-1);
 			}
-			else if (b.pieceAt(x+1, y+1) != null && b.pieceAt(x+1, y+1).side() != this.side() && deltaX == -2 && deltaY == -2) {
+			else if (deltaX == -2 && deltaY == -2 && b.pieceAt(x+1, y+1) != null && b.pieceAt(x+1, y+1).side() != this.side()) {
 					b.remove(x+1,y+1);
 			}
-			else if (b.pieceAt(x-1, y+1) != null && b.pieceAt(x-1, y+1).side() != this.side() && deltaX == 2 && deltaY == -2) {
+			else if (deltaX == 2 && deltaY == -2 && x != 0 && b.pieceAt(x-1, y+1) != null && b.pieceAt(x-1, y+1).side() != this.side()) {
 					b.remove(x-1,y+1);
 			}
-			xPosition = x;
-			yPosition = y;
 			hasCaptured = true;
-		}
-		else if (Math.abs(deltaX) == 1 && Math.abs(deltaY) == 1) {
-			xPosition = x;
-			yPosition = y;
 		}
 		if ((isFire() && y == 7) || (!isFire() && y == 0)) {
 			crowned = true;
 		}
+		b.place(null, xPosition, yPosition);
+		b.place(this, x, y);
+		xPosition = x;
+		yPosition = y;
+		if (isBomb() && hasCaptured()) {
+			bombExplosion(x,y);
+		}
+	}
+
+	private boolean intervalContains(int low, int high, int n) {
+    	return n >= low && n < high;
+	}
+
+	private void bombExplosion(int x,int y) {
+		int left = x-1;
+		int right = x+1;
+		int above = y+1;
+		int below = y-1;
+		if (intervalContains(0,8,left) && intervalContains(0,8,above)) {
+			if (b.pieceAt(left,above) != null && !b.pieceAt(left,above).isShield()) {
+				b.remove(left, above);
+			}
+		}
+		if (intervalContains(0,8,right) && intervalContains(0,8,above)) {
+			if (b.pieceAt(right,above) != null && !b.pieceAt(right,above).isShield()) {
+				b.remove(right, above);
+			}
+		}
+		if (intervalContains(0,8,left) && intervalContains(0,8,below)) {
+			if (b.pieceAt(left,below) != null && !b.pieceAt(left,below).isShield()) {
+				b.remove(left, below);
+			}
+		}
+		if (intervalContains(0,8,right) && intervalContains(0,8,below)) {
+			if (b.pieceAt(right,below) != null && !b.pieceAt(right,below).isShield()) {
+				b.remove(right, below);
+			}
+		}
+		b.remove(x,y);
 	}
 
 	public boolean hasCaptured() {
