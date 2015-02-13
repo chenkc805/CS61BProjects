@@ -66,7 +66,7 @@ public class Piece {
 		if ((isFire() && y == 7) || (!isFire() && y == 0)) {
 			crowned = true;
 		}
-		b.place(null, xPosition, yPosition);
+		b.remove(xPosition, yPosition);
 		b.place(this, x, y);
 		xPosition = x;
 		yPosition = y;

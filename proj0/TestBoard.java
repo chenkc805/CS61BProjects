@@ -7,14 +7,16 @@ import org.junit.Test;
 
 public class TestBoard {
 
-	public Board board = new Board(true);
-	public Piece tester = new Piece(true, board, 0, 0, "pawn");
-    public Piece tester0 = new Piece(true, board, 1, 1, "pawn");
-    public Piece oppTester0 = new Piece(false, board, 3, 3, "pawn");
-    public Piece bomb = new Piece(false, board, 3, 3, "bomb");
-    public Piece oppTester1 = new Piece(false, board, 5, 3, "pawn");
-    public Piece oppTester2 = new Piece(false, board, 0, 0, "pawn");
-	public Piece oppTester = new Piece(false, board, 1, 1, "pawn");
+	private Board board = new Board(true);
+	private Piece tester = new Piece(true, board, 0, 0, "pawn");
+    private Piece testerOOB = new Piece(true, board, 123, 15, "pawn");
+    private Piece tester0 = new Piece(true, board, 1, 1, "pawn");
+    private Piece oppTester0 = new Piece(false, board, 3, 3, "pawn");
+    private Piece bomb = new Piece(false, board, 3, 3, "bomb");
+    private Piece bombOOB = new Piece(false, board, -23, 4, "bomb");
+    private Piece oppTester1 = new Piece(false, board, 5, 3, "pawn");
+    private Piece oppTester2 = new Piece(false, board, 0, 0, "pawn");
+	private Piece oppTester = new Piece(false, board, 1, 1, "pawn");
     /** Tests the constructor of DoubleChain */
 
     @Test
@@ -29,20 +31,37 @@ public class TestBoard {
 
     @Test
     public void testPlace() {
-        board.place(tester,1,1);
+        board.place(tester0,1,1);
+        board.place(testerOOB, 123,15);
+        board.place(bomb,-23,4);
+        assertFalse(board.canSelect(9,9));
+        assertFalse(board.canSelect(-23,4));
+        assertFalse(board.canSelect(10, -9));
+        assertTrue(board.canSelect(1,1));
         board.place(oppTester, 0,0);
     	assertEquals(null, board.pieceAt(1,2));
-        assertEquals(tester, board.pieceAt(1,1));
+        assertEquals(tester0, board.pieceAt(1,1));
         assertEquals(oppTester, board.pieceAt(0,0));
     }
 
     @Test
+    public void testPieceAt() {
+        board.place(tester0,1,1);
+        board.place(testerOOB, 123,15);
+        board.place(bomb,-23,4);
+        assertNull(board.pieceAt(-23,5));
+        assertNull(board.pieceAt(5,5));
+    }
+
+    @Test
     public void testRemove() {
-        board.place(tester,1,1);
-        board.place(oppTester, 0,0);
-        board.remove(1,1);
-        assertEquals(null, board.pieceAt(1,1));
-        assertEquals(oppTester, board.pieceAt(0,0));
+        board.place(tester,0,0);
+        board.place(oppTester,1,1);
+        board.place(oppTester0,3,3);
+        board.place(oppTester1,5,3);
+        assertEquals(oppTester0, board.remove(3,3));
+        assertNull(board.remove(5,5));
+        assertNull(board.remove(9,9));
     }
 
     @Test
@@ -118,7 +137,6 @@ public class TestBoard {
         assertNull(board.pieceAt(1,1));
         assertNull(board.pieceAt(3,3));
         assertNull(board.pieceAt(5,3));
-
     }
 
     public static void main(String[] args) {

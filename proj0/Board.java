@@ -20,14 +20,6 @@ public class Board {
 	private int selectedXPosition;
 	private int selectedYPosition;
 	private boolean moved;
-	// public Piece tester = new Piece(true, this, 0, 0, "shield");
- //    public Piece tester0 = new Piece(true, this, 1, 1, "pawn");
- //    public Piece tester1 = new Piece(true, this, 1, 1, "pawn");
- //    public Piece oppTester0 = new Piece(false, this, 3, 3, "pawn");
- //    public Piece bomb = new Piece(false, this, 2, 2, "bomb");
- //    public Piece oppTester1 = new Piece(false, this, 5, 3, "pawn");
- //    public Piece oppTester2 = new Piece(false, this, 0, 0, "pawn");
-	// public Piece oppTester = new Piece(false, this, 1, 1, "pawn");
 
     /** Draws an N x N board. Adapted from:
         http://introcs.cs.princeton.edu/java/15inout/CheckerBoard.java.html
@@ -41,8 +33,8 @@ public class Board {
                 if (i == selectedXPosition && j == selectedYPosition) StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
                 StdDrawPlus.filledSquare(i + .5, j + .5, .5);
                 StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-                if (pieces[i][j] != null) {
-                	Piece aPiece = pieces[i][j];
+                if (pieceAt(i,j) != null) {
+                	Piece aPiece = pieceAt(i,j);
                 	if (aPiece.isFire()) {
 	                	if (aPiece.isBomb()) {
 	                		if (aPiece.isKing()) {
@@ -165,6 +157,9 @@ public class Board {
 	}
 	
 	public Piece pieceAt(int x, int y) {
+		if (x < 0 || y < 0 || x > N-1 || y > N-1) {
+			return null;
+		}
 		return pieces[x][y];
 	}
 
@@ -178,7 +173,7 @@ public class Board {
 		if (startPiece == null) {
 			return false;
 		}
-		if (deltaYAbs != deltaXAbs || deltaXAbs > 2 || xFinal > 7 || yFinal > 7 || xFinal < 0 || yFinal < 0) {
+		if (deltaYAbs != deltaXAbs || deltaXAbs > 2 || xFinal > N-1 || yFinal > N-1 || xFinal < 0 || yFinal < 0) {
 			return false;
 		}
 		if (deltaXAbs == 1 && finalPiece == null) {
@@ -217,27 +212,32 @@ public class Board {
 	}
 	
 	public boolean canSelect(int x, int y) {
-		Piece aPiece = pieceAt(x,y);
-		if (aPiece != null) {  									// There is a piece at x,y
-			if (turn != aPiece.side()) {						// Check if the piece is on the player's side
-				return false;									//
-			}													//
-			if (selected == false) {							// Check if that square is already selected
-				return true;									//
-			}													// 
-			if (selected == true && moved == false) {			// Check if the player has selected a piece but has not moved it
-				selected = false;
-				return true;
-			}
+		if (x < 0 || y < 0 || x > N-1 || y > N-1) {
+			return false;
 		}
 		else {
-			if (selected == true) {
-				if (moved == false) {
-					return validMove(selectedXPosition, selectedYPosition, x,y);
+			Piece aPiece = pieceAt(x,y);
+			if (aPiece != null) {  									
+				if (turn != aPiece.side()) {						
+					return false;									
+				}													
+				if (selected == false) {							
+					return true;									
+				}													 
+				if (selected == true && moved == false) {			
+					selected = false;
+					return true;
 				}
-				else if (moved && selectedPiece.hasCaptured()) {
-					return validMove(selectedXPosition, selectedYPosition, x,y);
-				}	
+			}
+			else {
+				if (selected == true) {
+					if (moved == false) {
+						return validMove(selectedXPosition, selectedYPosition, x,y);
+					}
+					else if (moved && selectedPiece.hasCaptured()) {
+						return validMove(selectedXPosition, selectedYPosition, x,y);
+					}	
+				}
 			}
 		}
 		return false;
@@ -257,11 +257,23 @@ public class Board {
 	}
 
 	public void place(Piece p, int x, int y) {
-		pieces[x][y] = p;
+		if (x < 0 || y < 0 || x > N-1 || y > N-1 || p == null) {
+		}
+		else {
+			pieces[x][y] = p;
+		}
 	}
 
 	public Piece remove(int x, int y) {
+		if (x < 0 || y < 0 || x > N-1 || y > N-1) {
+			System.out.println("Trying to remove OOB.");
+			return null;
+		}
 		Piece piece = pieceAt(x,y);
+		if (piece == null) {
+			System.out.println("There is no piece here to remove.");
+			return null;
+		}
 		pieces[x][y] = null;
 		return piece;
 	}
@@ -271,15 +283,13 @@ public class Board {
 	}
 
 	public void endTurn() {
-		if (canEndTurn()) {
-			turn = Math.abs(this.turn-1);
-			moved = false;
-			selected = false;
-			selectedPiece.doneCapturing();
-			selectedPiece = null;
-			selectedXPosition = -1;
-			selectedYPosition = -1;
-		}
+		turn = Math.abs(this.turn-1);
+		moved = false;
+		selected = false;
+		selectedPiece.doneCapturing();
+		selectedPiece = null;
+		selectedXPosition = -1;
+		selectedYPosition = -1;
 	}
 
 	private int numberOfPieces(int team) {
