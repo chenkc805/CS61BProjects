@@ -30,6 +30,11 @@ public class TestBoard {
     }
 
     @Test
+    public void testEmptyBoard() {
+        Board empty = new Board(true);
+        assertEquals("No one", empty.winner());
+    }
+    @Test
     public void testPlace() {
         board.place(tester0,1,1);
         board.place(testerOOB, 123,15);
