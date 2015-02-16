@@ -30,11 +30,10 @@ public class ApplicableIntList{
         }
         else {
             ApplicableIntList pointer = this;
-            while (pointer.tail != null) {
-              if (pointer.tail.head > i) {
-                pointer.tail = new ApplicableIntList (i, pointer.tail);
-              }
+            while (pointer.tail != null && i > pointer.tail.head) {
+                pointer = pointer.tail;
             }
+            pointer.tail = new ApplicableIntList (i, pointer.tail);
         }
     }
 

@@ -83,7 +83,7 @@ public class SortedComparableList {
         SortedComparableList pointer = subTail(L, start);
         SortedComparableList result = new SortedComparableList(pointer.head, pointer.tail);
         pointer = result;
-        for (int i = 0; i < len ; i++) {
+        for (int i = 1; i < len ; i++) {
           pointer = pointer.tail;
         }
         pointer = null;
@@ -92,9 +92,14 @@ public class SortedComparableList {
 
     /** Removes items from L at position len+1 and later. */
     public static void expungeTail(SortedComparableList L, int len) {
-        SortedComparableList result = sublist(L, 0, len);
-        L.head = result.head;
-        L.tail = result.tail;
+        if (L == null) {
+            return;
+        }
+        else if (len == 0) {
+            L.tail = null;
+            return;
+        }
+        expungeTail(L.tail, len-1);
     }
 
     /**
@@ -107,17 +112,18 @@ public class SortedComparableList {
      *  output list is [ 0 1 0 3 1 0 ].
      **/
     public void squish() {
-      SortedComparableList pointerSingles = this;
-      SortedComparableList pointerDuplicates = this;
-      while (pointerDuplicates != null) {
-        if (pointerDuplicates.head == pointerSingles.head) {
+        SortedComparableList pointerSingles = this;
+        SortedComparableList pointerDuplicates = this;
+        while (pointerDuplicates != null) {
+            if (pointerDuplicates.head == pointerSingles.head) {
+            }
+            else {
+                pointerSingles.tail = pointerDuplicates;
+                pointerSingles = pointerDuplicates;
+            }
+            pointerDuplicates = pointerDuplicates.tail;
         }
-        else {
-          pointerSingles.tail = pointerDuplicates;
-          pointerSingles = pointerDuplicates;
-        }
-        pointerDuplicates = pointerDuplicates.tail;
-      }
+        pointerSingles.tail = pointerDuplicates;
     }
 
     /** Duplicates each Comparable so that for every original
