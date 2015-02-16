@@ -13,7 +13,7 @@ public class Planet {
 	private Planet[] planets;
 	private double radius;
 
-	public Planet(double xPosition, double yPosition, double velocityX, double velocityY, double radius, double m, String image) {
+	public Planet(double xPosition, double yPosition, double velocityX, double velocityY, double m, String image, double radius) {
 		this.x = xPosition;
 		this.y = yPosition;
 		this.xVelocity = velocityX;
