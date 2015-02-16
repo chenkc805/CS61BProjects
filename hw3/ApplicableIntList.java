@@ -31,8 +31,8 @@ public class ApplicableIntList{
         else {
             ApplicableIntList pointer = this;
             while (pointer.tail != null) {
-              if (pointer.tail.head > c) {
-                pointer.tail = new ApplicableIntList (c, pointer.tail);
+              if (pointer.tail.head > i) {
+                pointer.tail = new ApplicableIntList (i, pointer.tail);
               }
             }
         }
@@ -42,9 +42,6 @@ public class ApplicableIntList{
      *  The first element, which is in location 0, is the 0th element.
      *  Assume i takes on the values [0, length of list - 1]. */
     public int get(int i) {
-        if (i == 0 || head == null) {
-            return head;
-        }
         ApplicableIntList pointer = this;
         while (i > 0 && pointer.tail != null) {
           pointer = pointer.tail;
@@ -57,10 +54,10 @@ public class ApplicableIntList{
     public void apply(IntUnaryFunction f) {
         ApplicableIntList pointer = this;
         while (pointer != null) {
-          pointer.head = f(pointer.head);
+          pointer.head = f.apply(pointer.head);
           pointer = pointer.tail;
         }
-        ApplicableIntList newList = ApplicableIntList(get(0), null);
+        ApplicableIntList newList = new ApplicableIntList(get(0), null);
         pointer = this.tail;
         while (pointer != null) {
             newList.insert(pointer.head);

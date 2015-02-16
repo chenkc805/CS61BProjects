@@ -24,16 +24,17 @@ public class SortedComparableList {
 
     /** Inserts Comparable c into its correct location in this list. */
     public void insert(Comparable c) {
-        if (i < head) {
-            tail = new SortedComparableList(head, tail);
-            head = i;
-        }
-        else {
-            SortedComparableList pointer = this;
-            while (pointer.tail.head != null) {
-                if (pointer.tail.head > c) {
-                pointer.tail = new SortedComparableList (c, pointer.tail);
+        if (c != null) {
+            if (c.compareTo(head) < 0) {
+                tail = new SortedComparableList(head, tail);
+                head = c;
+            }
+            else {
+                SortedComparableList pointer = this;
+                while (pointer.tail != null && c.compareTo(pointer.tail.head) > 0) {
+                    pointer = pointer.tail;
                 }
+                pointer.tail = new SortedComparableList(c, pointer.tail);
             }
         }
     }
@@ -42,17 +43,12 @@ public class SortedComparableList {
      *  The first element, which is in location 0, is the 0th element.
      *  Assume i takes on the values [0, length of list - 1]. */
     public Comparable get(int i) {
-        if (head == null || i == 0) {
-            return head;
+        SortedComparableList pointer = this;
+        while (i > 0 && pointer.tail != null) {
+          pointer = pointer.tail;
+          i -= 1;
         }
-        else {
-            SortedComparableList pointer = this;
-            while (i > 0) {
-            pointer = pointer.tail;
-            i -= 1;
-            }
         return pointer.head;
-        }
     }
 
     /** Adds every item in THAT to this list. */
@@ -97,7 +93,8 @@ public class SortedComparableList {
     /** Removes items from L at position len+1 and later. */
     public static void expungeTail(SortedComparableList L, int len) {
         SortedComparableList result = sublist(L, 0, len);
-        return result;
+        L.head = result.head;
+        L.tail = result.tail;
     }
 
     /**
