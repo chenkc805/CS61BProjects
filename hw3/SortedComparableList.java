@@ -65,12 +65,12 @@ public class SortedComparableList {
       *
       * This method should NOT modify L. */
     public static SortedComparableList subTail(SortedComparableList L, int start) {
-        SortedComparableList pointer = L;
-        while (start > 0) {
-          pointer = pointer.tail;
-          start -= 1;
+        if (L == null || start == 0) {
+            return L;
         }
-        return pointer;
+        else {
+            return subTail(L.tail, start -1);
+        }
     }
 
     /** Returns the sublist consisting of LEN items from list L,
@@ -80,14 +80,13 @@ public class SortedComparableList {
      *  Assume START and END are >= 0.
      */
     public static SortedComparableList sublist(SortedComparableList L, int start, int len) {
-        SortedComparableList pointer = subTail(L, start);
-        SortedComparableList result = new SortedComparableList(pointer.head, pointer.tail);
-        pointer = result;
-        for (int i = 1; i < len ; i++) {
-          pointer = pointer.tail;
+        if (len == 0) {
+            return null;
         }
-        pointer = null;
-        return result;
+        else if (start > 0) {
+            return sublist(L.tail, start -1, len);
+        }
+        return new SortedComparableList(L.head, sublist(L.tail, 0, len - 1));
     }
 
     /** Removes items from L at position len+1 and later. */
