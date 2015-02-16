@@ -49,7 +49,7 @@ public class SortedComparableList {
             SortedComparableList pointer = this;
             while (i > 0) {
             pointer = pointer.tail;
-            i -= 1
+            i -= 1;
             }
         return pointer.head;
         }

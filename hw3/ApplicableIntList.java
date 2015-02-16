@@ -13,7 +13,7 @@ public class ApplicableIntList{
     /** A list with head HEAD0 and tail TAIL0. */
     public ApplicableIntList(int head0, ApplicableIntList tail0) {
         head = head0;
-        tail = tail0
+        tail = tail0;
     }
 
     /** A list with null tail, and head = 0. */
@@ -48,7 +48,7 @@ public class ApplicableIntList{
         ApplicableIntList pointer = this;
         while (i > 0 && pointer.tail != null) {
           pointer = pointer.tail;
-          i -= 1
+          i -= 1;
         }
         return pointer.head;
     }

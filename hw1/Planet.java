@@ -5,12 +5,12 @@ public class Planet {
 	public double yVelocity;
 	public double mass;
 	public String img;
-	public double yNetForce;
-	public double xNetForce;
-	public double netForce;
-	public double xAccel;
-	public double yAccel;
-	public Planet[] planets;
+	private double yNetForce;
+	private double xNetForce;
+	private double netForce;
+	private double xAccel;
+	private double yAccel;
+	private Planet[] planets;
 
 	public Planet(double xPosition, double yPosition, double velocityX, double velocityY, double m, String image) {
 		this.x = xPosition;
