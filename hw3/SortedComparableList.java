@@ -12,29 +12,55 @@ public class SortedComparableList {
 
     /** A list with head HEAD0 and tail TAIL0. */
     public SortedComparableList(Comparable head0, SortedComparableList tail0) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        this.head = head0;
+        this.tail = tail0;
     }
 
     /** A list with null tail, and head = 0. */
     public SortedComparableList(){
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        this.head = 0;
+        this.tail= null;
     }
 
     /** Inserts Comparable c into its correct location in this list. */
     public void insert(Comparable c) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (i < head) {
+            tail = new SortedComparableList(head, tail);
+            head = i;
+        }
+        else {
+            SortedComparableList pointer = this;
+            while (pointer.tail.head != null) {
+                if (pointer.tail.head > c) {
+                pointer.tail = new SortedComparableList (c, pointer.tail);
+                }
+            }
+        }
     }
 
     /** Returns the i-th int in this list.
      *  The first element, which is in location 0, is the 0th element.
      *  Assume i takes on the values [0, length of list - 1]. */
     public Comparable get(int i) {
-        return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (head == null || i == 0) {
+            return head;
+        }
+        else {
+            SortedComparableList pointer = this;
+            while (i > 0) {
+            pointer = pointer.tail;
+            i -= 1
+            }
+        return pointer.head;
+        }
     }
 
     /** Adds every item in THAT to this list. */
     public void extend(SortedComparableList that) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+      while (that != null) {
+        insert(that.head);
+        that = that.tail;
+      }
     }
 
     /** Returns a list consisting of the elements of L starting from
@@ -43,7 +69,12 @@ public class SortedComparableList {
       *
       * This method should NOT modify L. */
     public static SortedComparableList subTail(SortedComparableList L, int start) {
-        return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+        SortedComparableList pointer = L;
+        while (start > 0) {
+          pointer = pointer.tail;
+          start -= 1;
+        }
+        return pointer;
     }
 
     /** Returns the sublist consisting of LEN items from list L,
@@ -53,12 +84,20 @@ public class SortedComparableList {
      *  Assume START and END are >= 0.
      */
     public static SortedComparableList sublist(SortedComparableList L, int start, int len) {
-        return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+        SortedComparableList pointer = subTail(L, start);
+        SortedComparableList result = new SortedComparableList(pointer.head, pointer.tail);
+        pointer = result;
+        for (int i = 0; i < len ; i++) {
+          pointer = pointer.tail;
+        }
+        pointer = null;
+        return result;
     }
 
     /** Removes items from L at position len+1 and later. */
     public static void expungeTail(SortedComparableList L, int len) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        SortedComparableList result = sublist(L, 0, len);
+        return result;
     }
 
     /**
@@ -71,7 +110,17 @@ public class SortedComparableList {
      *  output list is [ 0 1 0 3 1 0 ].
      **/
     public void squish() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+      SortedComparableList pointerSingles = this;
+      SortedComparableList pointerDuplicates = this;
+      while (pointerDuplicates != null) {
+        if (pointerDuplicates.head == pointerSingles.head) {
+        }
+        else {
+          pointerSingles.tail = pointerDuplicates;
+          pointerSingles = pointerDuplicates;
+        }
+        pointerDuplicates = pointerDuplicates.tail;
+      }
     }
 
     /** Duplicates each Comparable so that for every original
@@ -85,7 +134,12 @@ public class SortedComparableList {
      *  duplicate.
      **/
     public void twin() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+      SortedComparableList pointer = this;
+      int i = 0;
+      while (pointer != null) {
+        pointer.tail = new SortedComparableList(pointer.head, pointer.tail);
+        pointer = pointer.tail.tail;
+      }
     }
 
     /** Returns NULL if no cycle exists, else returns cycle location. */
