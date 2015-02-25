@@ -8,7 +8,6 @@ public class GuitarString {
       * in lecture on Friday. */
     private static final int SR = 44100;      // Sampling Rate
     private static final double DECAY = .996; // energy decay factor
-    private double takeOneOut;
     
     /* Buffer for storing sound data. */
     private BoundedQueue buffer;
@@ -49,13 +48,13 @@ public class GuitarString {
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
-        takeOneOut = buffer.dequeue(); 
+        double takeOneOut = buffer.dequeue();
         buffer.enqueue(DECAY*0.5*(takeOneOut+buffer.peek()));
     }
     
     /* Return the double at the front of the buffer. */
     public double sample() {
-        return takeOneOut;
+        return buffer.peek();
     }
     
 }
