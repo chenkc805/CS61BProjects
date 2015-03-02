@@ -38,11 +38,13 @@ public class ULLMapTest {
         System.out.println(umi.next());
         System.out.println(umi.next());
         System.out.println(umi.next());
+        assertEquals("zero", um.get(0));
         ULLMap<String, Integer> mu = ULLMap.inverse(um);
         Iterator<String> mui = mu.iterator();
         System.out.println(mui.next());
         System.out.println(mui.next());
         System.out.println(mui.next());
+        assertEquals((int) 0,(int) mu.get("zero"));
     }
 
     @Test
@@ -59,6 +61,7 @@ public class ULLMapTest {
     public void testSize() {
         ULLMap<Integer, String> um = new ULLMap<Integer, String>();
         um.put(0, "zero");
+        assertEquals(1, um.size());
         um.put(1, "one");
         um.put(2, "two");
         assertEquals(3, um.size());

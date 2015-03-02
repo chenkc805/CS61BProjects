@@ -23,7 +23,7 @@ public class ULLMap<S, T> implements Map61B<S, T>, Iterable<S> { //FIX ME
         size = 0;
     }
 
-    public static <T,S> ULLMap<T,S> inverse(ULLMap<S,T> map) {
+    public static <T,S> ULLMap<T,S> invert(ULLMap<S,T> map) {
         if (map.front == null) {
             return null;
         } else {
