@@ -21,14 +21,14 @@ public interface Map61B<K, V> {
     /* Associates the specified value with the specified key in this map. */
     public void put(K key, V value);
 
-    /* Removes the mapping for the specified key from this map if present.
-     * Not required for HW5. */
-    public V remove(K key);
+    // /* Removes the mapping for the specified key from this map if present.
+    //  * Not required for HW5. */
+    // public V remove(K key);
 
-    /* Removes the entry for the specified key only if it is currently mapped to
-     * the specified value. Not required for HW5. */
-    public V remove(K key, V value);
+    //  Removes the entry for the specified key only if it is currently mapped to
+    //  * the specified value. Not required for HW5. 
+    // public V remove(K key, V value);
 
-    /* Returns a Set view of the keys contained in this map. Not required for HW5. */
-    public Set<K> keySet();    
+    // /* Returns a Set view of the keys contained in this map. Not required for HW5. */
+    // public Set<K> keySet();    
 }

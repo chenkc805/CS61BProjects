@@ -7,6 +7,7 @@ import java.util.Iterator;
  */
 
 public class ULLMapTest {
+
     @Test
     public void testBasic() {
         ULLMap<String, String> um = new ULLMap<String, String>();
@@ -15,7 +16,7 @@ public class ULLMapTest {
     }
 
     
-    /*@Test
+    @Test
     public void testIterator() {
         ULLMap<Integer, String> um = new ULLMap<Integer, String>();
         um.put(0, "zero");
@@ -23,7 +24,56 @@ public class ULLMapTest {
         um.put(2, "two");
         Iterator<Integer> umi = um.iterator();
         System.out.println(umi.next());
-    }*/
+        System.out.println(umi.next());
+        System.out.println(umi.next());
+    }
+
+    @Test
+    public void testInverse() {
+        ULLMap<Integer, String> um = new ULLMap<Integer, String>();
+        um.put(0, "zero");
+        um.put(1, "one");
+        um.put(2, "two");
+        Iterator<Integer> umi = um.iterator();
+        System.out.println(umi.next());
+        System.out.println(umi.next());
+        System.out.println(umi.next());
+        ULLMap<String, Integer> mu = ULLMap.inverse(um);
+        Iterator<String> mui = mu.iterator();
+        System.out.println(mui.next());
+        System.out.println(mui.next());
+        System.out.println(mui.next());
+    }
+
+    @Test
+    public void testPut() {
+        ULLMap<Integer, String> um = new ULLMap<Integer, String>();
+        um.put(0, "zero");
+        um.put(1, "one");
+        um.put(2, "two");
+        assertEquals("one", um.get(1));
+        assertEquals(null, um.get(4));
+    }
+
+    @Test
+    public void testSize() {
+        ULLMap<Integer, String> um = new ULLMap<Integer, String>();
+        um.put(0, "zero");
+        um.put(1, "one");
+        um.put(2, "two");
+        assertEquals(3, um.size());
+    }
+
+    @Test
+    public void testClear() {
+        ULLMap<Integer, String> um = new ULLMap<Integer, String>();
+        um.put(0, "zero");
+        um.put(1, "one");
+        um.put(2, "two");
+        assertEquals(3, um.size());
+        um.clear();
+        assertEquals(0, um.size());
+    }
     
 
     /** Runs tests. */
