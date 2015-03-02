@@ -60,14 +60,23 @@ public class ULLMap<S, T> implements Map61B<S, T>, Iterable<S> { //FIX ME
     public void put(S key, T val) { //FIX ME
         if (front == null) {
             front = new Entry(key, val, null);
-        } else {
+            size += 1;
+        } 
+        else if (containsKey(key)) {
+            Entry pointer = front;
+            while (pointer.key != key) {
+                pointer = pointer.next;
+            }
+            pointer.val = val;
+        }
+        else {
             Entry pointer = front;
             while (pointer.next != null) {
                 pointer = pointer.next;
             }
             pointer.next = new Entry(key,val,null); //FILL ME IN
-        }
-        size++;
+            size += 1;
+        } 
     }
 
     @Override

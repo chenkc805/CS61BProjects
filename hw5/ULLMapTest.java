@@ -29,7 +29,7 @@ public class ULLMapTest {
     }
 
     @Test
-    public void testInverse() {
+    public void testInvert() {
         ULLMap<Integer, String> um = new ULLMap<Integer, String>();
         um.put(0, "zero");
         um.put(1, "one");
@@ -39,7 +39,7 @@ public class ULLMapTest {
         System.out.println(umi.next());
         System.out.println(umi.next());
         assertEquals("zero", um.get(0));
-        ULLMap<String, Integer> mu = ULLMap.inverse(um);
+        ULLMap<String, Integer> mu = ULLMap.invert(um);
         Iterator<String> mui = mu.iterator();
         System.out.println(mui.next());
         System.out.println(mui.next());
@@ -55,6 +55,8 @@ public class ULLMapTest {
         um.put(2, "two");
         assertEquals("one", um.get(1));
         assertEquals(null, um.get(4));
+        um.put(2, "too");
+        assertEquals("too", um.get(2));
     }
 
     @Test
@@ -76,6 +78,15 @@ public class ULLMapTest {
         assertEquals(3, um.size());
         um.clear();
         assertEquals(0, um.size());
+    }
+
+    @Test
+    public void testContains() {
+        ULLMap<Integer, String> um = new ULLMap<Integer, String>();
+        um.put(0, "zero");
+        um.put(1, "one");
+        um.put(2, "two");
+        assertTrue(um.containsKey(1));
     }
     
 
