@@ -44,6 +44,6 @@ public class ArrayList61B<E> extends AbstractList<E> {
 	}
 
 	public int size() {
-		return size;
+		return numberOfElements;
 	}
 }
