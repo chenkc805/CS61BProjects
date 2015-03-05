@@ -1,3 +1,4 @@
+package demos;
 import ngordnet.WordNet;
 
 /** Class that demonstrates basic WordNet functionality.
@@ -5,7 +6,7 @@ import ngordnet.WordNet;
  */
 public class WordNetDemo {
     public static void main(String[] args) {
-        WordNet wn = new WordNet("./wordnet/synsets11.txt", "./wordnet/hyponyms11.txt");
+        WordNet wn = new WordNet("./p1data/wordnet/synsets11.txt", "./p1data/wordnet/hyponyms11.txt");
 
         /* These should all print true. */
         System.out.println(wn.isNoun("jump"));
