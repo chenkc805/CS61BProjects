@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.Digraph;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.*;
 
 
 public class WordNet {
