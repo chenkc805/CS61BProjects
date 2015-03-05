@@ -2,6 +2,7 @@ package ngordnet;
 import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.Collection;
+import java.util.LinkedList;
 
 public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {    
 
@@ -51,11 +52,19 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
       * a Double time series (for simplicity). */
     public TimeSeries<Double> plus(TimeSeries<? extends Number> ts) {
         TimeSeries<Double> result = new TimeSeries();
+        LinkedList<Integer> yearsAccountedFor = new LinkedList<Integer>();
         for (Integer key: this.keySet()) {
             if (!ts.containsKey(key)) {
                 result.put(key, this.get(key).doubleValue());
             } else {
                 result.put(key, this.get(key).doubleValue() + ts.get(key).doubleValue());
+            }
+            yearsAccountedFor.add(key);
+        }
+        for (Integer key: ts.keySet()) {
+            if (!yearsAccountedFor.contains(key)) {
+                result.put(key, ts.get(key).doubleValue());
+                yearsAccountedFor.add(key);
             }
         }
         return result;
@@ -63,7 +72,7 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
 
     /** Returns all years for this time series (in any order). */
     public Collection<Number> years() {
-        yearsResult = new HashSet<Number>();
+        yearsResult = new LinkedList<Number>();
         for (Integer key: this.keySet()) {
             yearsResult.add(key);
         }
@@ -72,7 +81,7 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
 
     /** Returns all data for this time series (in any order). */
     public Collection<Number> data() {
-        dataResult = new HashSet<Number>();
+        dataResult = new LinkedList<Number>();
         for (Integer key: this.keySet()) {
             dataResult.add(this.get(key));
         }
