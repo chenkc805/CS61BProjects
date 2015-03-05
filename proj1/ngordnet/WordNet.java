@@ -1,8 +1,9 @@
 package ngordnet;
 import edu.princeton.cs.algs4.Digraph;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
+
 
 public class WordNet {
 
@@ -26,7 +27,7 @@ public class WordNet {
                 synsetArrayList.add(synset[i]);
                 nouns.add(synset[i]);
             }
-            synsetNouns.put(Integer.parseInt(tokens[0]),synsetArrayList);
+            synsetNouns.put(Integer.parseInt(tokens[0]), synsetArrayList);
         }
 
         In hyponymScanner = new In(hyponymFilename);
@@ -35,10 +36,10 @@ public class WordNet {
             String row = hyponymScanner.readLine();
             String[] tokens = row.split(",");
             for (int i = 1; i < tokens.length; i++) {
-                hyponym.addEdge(Integer.parseInt(tokens[0]),Integer.parseInt(tokens[i]));
+                hyponym.addEdge(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[i]));
             }
         }
-  }
+    }
 
   /* Returns true if NOUN is a word in some synset. */
     public boolean isNoun(String noun) {
@@ -55,7 +56,7 @@ public class WordNet {
     * all of these synsets. See http://goo.gl/EGLoys for an example.
     * Do not include hyponyms of synonyms.
     */
-  public Set<String> hyponyms(String word) {
+    public Set<String> hyponyms(String word) {
         Set<String> hyponyms = new HashSet<String>();
         Set<Integer> ids = new HashSet<Integer>();
         for (Integer key: synsetNouns.keySet()) {

@@ -5,11 +5,13 @@ import java.util.Collection;
 
 public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {    
 
-    private TreeMap<Integer, T> tSeries;
+    private Collection<Number> yearsResult;
+    private Collection<Number> dataResult;
 
     /** Constructs a new empty TimeSeries. */
     public TimeSeries() {
-        this.tSeries = new TreeMap<Integer, T>();
+        // this.tSeries = new TreeMap<Integer, T>();
+        super();
     }
 
     /** Returns the years in which tSeries time series is valid. Doesn't really
@@ -22,23 +24,24 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
     /** Creates a copy of TS, but only between STARTYEAR and ENDYEAR. 
      * inclusive of both end points. */
     public TimeSeries(TimeSeries<T> ts, int startYear, int endYear) {
-        this.tSeries = new TreeMap<Integer, T>(ts.subMap(startYear, endYear));
+        super(ts.subMap(startYear, true, endYear, true));
+
     }
 
     /** Creates a copy of TS. */
-    public TimeSeries(TimeSeries<T> ts) {
-        this.tSeries = new TreeMap<Integer, T>(ts.subMap(ts.firstKey(), ts.lastKey()));
+    public TimeSeries(TimeSeries<T> ts) { 
+        super(ts);
     }
 
     /** Returns the quotient of this time series divided by the relevant value in ts.
       * If ts is missing a key in this time series, return an IllegalArgumentException. */
     public TimeSeries<Double> dividedBy(TimeSeries<? extends Number> ts) {
         TimeSeries<Double> result = new TimeSeries();
-        for (Integer key: tSeries.keySet()) {
+        for (Integer key: this.keySet()) {
             if (!ts.containsKey(key)) {
-            throw new IllegalArgumentException();
+                throw new IllegalArgumentException();
             } else {
-                result.put(key, tSeries.get(key).doubleValue() / ts.get(key).doubleValue());
+                result.put(key, this.get(key).doubleValue() / ts.get(key).doubleValue());
             }
         }
         return result;
@@ -48,11 +51,11 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
       * a Double time series (for simplicity). */
     public TimeSeries<Double> plus(TimeSeries<? extends Number> ts) {
         TimeSeries<Double> result = new TimeSeries();
-        for (Integer key: tSeries.keySet()) {
+        for (Integer key: this.keySet()) {
             if (!ts.containsKey(key)) {
-            throw new IllegalArgumentException();
+                result.put(key, this.get(key).doubleValue());
             } else {
-                result.put(key, tSeries.get(key).doubleValue() + ts.get(key).doubleValue());
+                result.put(key, this.get(key).doubleValue() + ts.get(key).doubleValue());
             }
         }
         return result;
@@ -60,20 +63,20 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
 
     /** Returns all years for this time series (in any order). */
     public Collection<Number> years() {
-        Collection<Number> result = new HashSet<Number>();
-        for (Integer key: tSeries.keySet()) {
-            result.add(key);
+        yearsResult = new HashSet<Number>();
+        for (Integer key: this.keySet()) {
+            yearsResult.add(key);
         }
-        return result;
+        return yearsResult;
     }
 
     /** Returns all data for this time series (in any order). */
     public Collection<Number> data() {
-        Collection<Number> result = new HashSet<Number>();
-        for (Integer key: tSeries.keySet()) {
-            result.add(tSeries.get(key));
+        dataResult = new HashSet<Number>();
+        for (Integer key: this.keySet()) {
+            dataResult.add(this.get(key));
         }
-        return result;
+        return dataResult;
     }
 }
 
