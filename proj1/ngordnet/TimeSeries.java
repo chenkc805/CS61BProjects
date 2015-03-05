@@ -1,6 +1,5 @@
 package ngordnet;
 import java.util.TreeMap;
-import java.util.HashSet;
 import java.util.Collection;
 import java.util.LinkedList;
 
