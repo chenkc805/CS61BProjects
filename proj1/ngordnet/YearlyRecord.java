@@ -53,7 +53,7 @@ public class YearlyRecord {
     }
 
     /** Records that WORD occurred COUNT times in this year. */
-    public void put(String word, int count) {
+    public void put(String word, int count) {         
         if (yrReversed.containsKey(count)) {
             yrReversed.get(count).add(word);
         } else {
@@ -77,6 +77,16 @@ public class YearlyRecord {
         if (sorted) {
             return words;
         } else {
+            yrReversed = new HashMap<Integer, ArrayList<String>>();
+            for (String key: yr.keySet()) {
+                if (yrReversed.containsKey(yr.get(key))) {
+                    yrReversed.get(yr.get(key)).add(key);
+                } else {
+                    ArrayList<String> putThis = new ArrayList<String>();
+                    putThis.add(key);
+                    yrReversed.put(yr.get(key), putThis);
+                }
+            }
             words = new LinkedList<String>();
             yrReversedSorted = new TreeMap<Integer, ArrayList<String>>(yrReversed);
             for (Integer key: yrReversedSorted.keySet()) {
@@ -94,6 +104,16 @@ public class YearlyRecord {
         if (sorted) {
             return counts;
         } else {
+            yrReversed = new HashMap<Integer, ArrayList<String>>();
+            for (String key: yr.keySet()) {
+                if (yrReversed.containsKey(yr.get(key))) {
+                    yrReversed.get(yr.get(key)).add(key);
+                } else {
+                    ArrayList<String> putThis = new ArrayList<String>();
+                    putThis.add(key);
+                    yrReversed.put(yr.get(key), putThis);
+                }
+            }
             counts = new LinkedList<Number>();
             yrReversedSorted = new TreeMap<Integer, ArrayList<String>>(yrReversed);
             for (Integer key: yrReversedSorted.keySet()) {
@@ -112,6 +132,16 @@ public class YearlyRecord {
         if (rankSorted) {
             return yrRank.get(word);
         } else {
+            yrReversed = new HashMap<Integer, ArrayList<String>>();
+            for (String key: yr.keySet()) {
+                if (yrReversed.containsKey(yr.get(key))) {
+                    yrReversed.get(yr.get(key)).add(key);
+                } else {
+                    ArrayList<String> putThis = new ArrayList<String>();
+                    putThis.add(key);
+                    yrReversed.put(yr.get(key), putThis);
+                }
+            }
             yrRank = new HashMap<String, Integer>();
             yrReversedSorted = new TreeMap<Integer, ArrayList<String>>(yrReversed);
             int i = 1;
