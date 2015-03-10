@@ -10,7 +10,6 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
 
     /** Constructs a new empty TimeSeries. */
     public TimeSeries() {
-        // this.tSeries = new TreeMap<Integer, T>();
         super();
     }
 
