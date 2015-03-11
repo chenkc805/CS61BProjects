@@ -3,9 +3,9 @@ package ngordnet;
 import com.xeiam.xchart.Chart;
 import com.xeiam.xchart.QuickChart;
 import com.xeiam.xchart.SwingWrapper;
-import com.xeiam.xchart.StyleManager.ChartTheme;
+// import com.xeiam.xchart.StyleManager.ChartTheme;
 import com.xeiam.xchart.ChartBuilder;
-import java.util.List;
+// import java.util.List;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Set;
@@ -14,6 +14,8 @@ import java.util.Set;
 public class Plotter {
     /** Creates a plot of the TimeSeries TS. Labels the graph with the
       * given TITLE, XLABEL, YLABEL, and LEGEND. */
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
 
     public static void plotTS(TimeSeries<? extends Number> ts, 
         String title, String xlabel, String ylabel, String legend) {
@@ -43,7 +45,8 @@ public class Plotter {
 
     /** Creates a plot of the processed history from STARTYEAR to ENDYEAR, using
       * NGM as a data source, and the YRP as a yearly record processor. */
-    public static void plotProcessedHistory(NGramMap ngm, int startYear, int endYear, YearlyRecordProcessor yrp) {
+    public static void plotProcessedHistory(NGramMap ngm, int startYear,
+        int endYear, YearlyRecordProcessor yrp) {
         TimeSeries wordWeights = ngm.processedHistory(startYear, endYear, yrp);
         plotTS(wordWeights, "Word Length", "year", "avg. length", "word length");
     }
@@ -61,7 +64,8 @@ public class Plotter {
       * from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
     public static void plotCategoryWeights(NGramMap ngm, WordNet wn, 
         String[] categoryLabels, int startYear, int endYear) {
-        Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("years").yAxisTitle("data").build();
+        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).
+            xAxisTitle("years").yAxisTitle("data").build();
 
         for (String categoryLabel : categoryLabels) {
             Set words = wn.hyponyms(categoryLabel);        
@@ -76,7 +80,8 @@ public class Plotter {
       * from STARTYEAR to ENDYEAR using NGM as a data source. */
     public static void plotAllWords(NGramMap ngm, String[] words, 
         int startYear, int endYear) {
-        Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("years").yAxisTitle("data").build();
+        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).
+            xAxisTitle("years").yAxisTitle("data").build();
 
         for (String word : words) {
             TimeSeries bundle = ngm.weightHistory(word, startYear, endYear);
@@ -102,7 +107,8 @@ public class Plotter {
         Collection counts = yr.counts();
         Collection ranks = downRange(counts.size()); 
 
-        Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("rank").yAxisTitle("count").build();
+        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).
+            xAxisTitle("rank").yAxisTitle("count").build();
         chart.getStyleManager().setYAxisLogarithmic(true);
         chart.getStyleManager().setXAxisLogarithmic(true);
         

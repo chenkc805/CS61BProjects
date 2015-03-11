@@ -10,31 +10,31 @@ public class NGramMap {
     /* The key is the YEAR and the value is a YEARLYRECORD with all the WORDS and their COUNTS. */
     private HashMap<Integer, YearlyRecord> yearMap;
     private HashMap<String, TimeSeries> wordsMap;
-    private In words;
-    private In counts;
+    private In wordsFile;
+    private In countsFile;
     private static YearlyRecordProcessor wlp = new WordLengthProcessor();
 
     /** Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME. */
     public NGramMap(String wordsFilename, String countsFilename) {
-        counts = new In(countsFilename);
-        words = new In(wordsFilename);
+        countsFile = new In(countsFilename);
+        wordsFile = new In(wordsFilename);
         
 
         countsMap = new TimeSeries<Long>();
         yearMap = new HashMap<Integer, YearlyRecord>();
         wordsMap = new HashMap<String, TimeSeries>();
 
-        while (counts.hasNextLine()) {
-            String row = counts.readLine();
+        while (countsFile.hasNextLine()) {
+            String row = countsFile.readLine();
             String[] tokens = row.split(",");
             countsMap.put(Integer.parseInt(tokens[0]), Long.parseLong(tokens[1]));
         }
 
-        while (words.hasNextLine()) {
-            String word = words.readString();
-            Integer year = words.readInt();
-            Integer count = words.readInt();
-            Integer forget = words.readInt();
+        while (wordsFile.hasNextLine()) {
+            String word = wordsFile.readString();
+            Integer year = wordsFile.readInt();
+            Integer count = wordsFile.readInt();
+            Integer forget = wordsFile.readInt();
             YearlyRecord yearMapValue = yearMap.get(year);
             if (yearMapValue != null) {
                 yearMapValue.put(word, count);

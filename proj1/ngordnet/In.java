@@ -6,6 +6,7 @@
  *
  *************************************************************************/
 package ngordnet;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -91,8 +92,7 @@ public final class In {
             InputStream is = socket.getInputStream();
             scanner = new Scanner(new BufferedInputStream(is), CHARSET_NAME);
             scanner.useLocale(LOCALE);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("Could not open " + socket);
         }
     }
@@ -106,8 +106,7 @@ public final class In {
             InputStream is     = site.getInputStream();
             scanner            = new Scanner(new BufferedInputStream(is), CHARSET_NAME);
             scanner.useLocale(LOCALE);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("Could not open " + url);
         }
     }
@@ -119,8 +118,7 @@ public final class In {
         try {
             scanner = new Scanner(file, CHARSET_NAME);
             scanner.useLocale(LOCALE);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("Could not open " + file);
         }
     }
@@ -143,7 +141,9 @@ public final class In {
             URL url = getClass().getResource(s);
 
             // or URL from web
-            if (url == null) { url = new URL(s); }
+            if (url == null) { 
+                url = new URL(s); 
+            }
 
             URLConnection site = url.openConnection();
 
@@ -154,8 +154,7 @@ public final class In {
             InputStream is     = site.getInputStream();
             scanner            = new Scanner(new BufferedInputStream(is), CHARSET_NAME);
             scanner.useLocale(LOCALE);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("Could not open " + s);
         }
     }
@@ -217,8 +216,11 @@ public final class In {
      */
     public String readLine() {
         String line;
-        try                 { line = scanner.nextLine(); }
-        catch (Exception e) { line = null;               }
+        try { 
+            line = scanner.nextLine(); 
+        } catch (Exception e) { 
+            line = null;
+        }
         return line;
     }
 
@@ -434,8 +436,7 @@ public final class In {
         try {
             in = new In(urlName);
             System.out.println(in.readAll());
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
         // read one line at a time from URL
@@ -447,8 +448,7 @@ public final class In {
                 String s = in.readLine();
                 System.out.println(s);
             }
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
         // read one string at a time from URL
@@ -460,8 +460,7 @@ public final class In {
                 String s = in.readString();
                 System.out.println(s);
             }
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
 
@@ -474,8 +473,7 @@ public final class In {
                 String s = in.readLine();
                 System.out.println(s);
             }
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
 
@@ -488,8 +486,7 @@ public final class In {
                 String s = in.readLine();
                 System.out.println(s);
             }
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
         // read one char at a time
@@ -501,8 +498,7 @@ public final class In {
                 char c = in.readChar();
                 System.out.print(c);
             }
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
         System.out.println();
 
@@ -515,8 +511,7 @@ public final class In {
                 String s = in.readLine();
                 System.out.println(s);
             }
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
 
@@ -530,8 +525,7 @@ public final class In {
                 System.out.println(s);
             }
             System.out.println();
-        }
-        catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
         System.out.println();
 
     }

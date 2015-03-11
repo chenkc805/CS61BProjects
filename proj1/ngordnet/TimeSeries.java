@@ -2,7 +2,6 @@ package ngordnet;
 import java.util.TreeMap;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.NavigableMap;
 
 public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {    
 
