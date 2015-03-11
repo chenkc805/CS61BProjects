@@ -3,6 +3,7 @@
  *  @author Josh Hug
  */
 
+package demos;
 import java.util.ArrayList;
 import com.xeiam.xchart.Chart;
 import com.xeiam.xchart.QuickChart;

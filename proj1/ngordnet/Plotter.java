@@ -14,7 +14,9 @@ import java.util.Set;
 public class Plotter {
     /** Creates a plot of the TimeSeries TS. Labels the graph with the
       * given TITLE, XLABEL, YLABEL, and LEGEND. */
-    public static void plotTS(TimeSeries<? extends Number> ts, String title, String xlabel, String ylabel, String legend) {
+
+    public static void plotTS(TimeSeries<? extends Number> ts, 
+        String title, String xlabel, String ylabel, String legend) {
         Collection years = ts.years();
         Collection data = ts.data();
 
@@ -34,21 +36,22 @@ public class Plotter {
     /** Creates a plot of the normalized weight counts for WORD from STARTYEAR
       * to ENDYEAR, using NGM as a data source. */
     public static void plotWeightHistory(NGramMap ngm, String word, int startYear, int endYear) {
-        TimeSeries<Integer> ts = ngm.weightHistory(word, startYear, endYear);
+        TimeSeries<Double> ts = ngm.weightHistory(word, startYear, endYear);
 
         plotTS(ts, "Plot Weight History", "Years", "Normalized Counts", "Weight History");
     }
 
     /** Creates a plot of the processed history from STARTYEAR to ENDYEAR, using
       * NGM as a data source, and the YRP as a yearly record processor. */
-    // public static void plotProcessedHistory(NGramMap ngm, int startYear, int endYear, YearlyRecordProcessor yrp) {
-    //     TimeSeries wordWeights = ngm.processedHistory(startYear, endYear, yrp);
-    //     plotTS(wordWeights, "Word Length", "year", "avg. length", "word length");
-    // }
+    public static void plotProcessedHistory(NGramMap ngm, int startYear, int endYear, YearlyRecordProcessor yrp) {
+        TimeSeries wordWeights = ngm.processedHistory(startYear, endYear, yrp);
+        plotTS(wordWeights, "Word Length", "year", "avg. length", "word length");
+    }
 
     /** Creates a plot of the total normalized count of every word that is a hyponym
       * of CATEGORYLABEL from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
-    public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String categoryLabel, int startYear, int endYear) {
+    public static void plotCategoryWeights(NGramMap ngm, WordNet wn, 
+        String categoryLabel, int startYear, int endYear) {
         Set words = wn.hyponyms(categoryLabel);        
         TimeSeries summedWeightHistory = ngm.summedWeightHistory(words, startYear, endYear);
         plotTS(summedWeightHistory, "Popularity", "year", "weight", categoryLabel);
@@ -56,7 +59,8 @@ public class Plotter {
 
     /** Creates overlaid category weight plots for each category label in CATEGORYLABELS
       * from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
-    public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String[] categoryLabels, int startYear, int endYear) {
+    public static void plotCategoryWeights(NGramMap ngm, WordNet wn, 
+        String[] categoryLabels, int startYear, int endYear) {
         Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("years").yAxisTitle("data").build();
 
         for (String categoryLabel : categoryLabels) {
@@ -70,7 +74,8 @@ public class Plotter {
 
     /** Makes a plot showing overlaid individual normalized count for every word in WORDS
       * from STARTYEAR to ENDYEAR using NGM as a data source. */
-    public static void plotAllWords(NGramMap ngm, String[] words, int startYear, int endYear) {
+    public static void plotAllWords(NGramMap ngm, String[] words, 
+        int startYear, int endYear) {
         Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("years").yAxisTitle("data").build();
 
         for (String word : words) {
@@ -103,8 +108,6 @@ public class Plotter {
         
         chart.addSeries("zipf", ranks, counts);
         new SwingWrapper(chart).displayChart();
-    }
-
     }
 } 
 

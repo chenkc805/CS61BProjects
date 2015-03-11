@@ -1,6 +1,7 @@
 /** Provides examples of using the YearlyRecord class.
  *  @author Josh Hug
  */
+package demos;
 import ngordnet.YearlyRecord;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class YearlyRecordDemo {
         */
 
         Collection<Number> counts = yr.counts();
+        System.out.println(counts);
         for (Number count : counts) {
             System.out.println(count);
         }

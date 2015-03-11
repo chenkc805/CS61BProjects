@@ -1,3 +1,5 @@
+package demos;
+
 import ngordnet.TimeSeries;
 import java.util.Collection;
 
@@ -16,9 +18,10 @@ public class TimeSeriesDemo {
            TimeSeries class should extend the TreeMap class. */
         ts.put(1992, 3.6);
         ts.put(1993, 9.2);
+        ts.put(1996, -15.7);
         ts.put(1994, 15.2);
         ts.put(1995, 16.1);
-        ts.put(1996, -15.7);
+
 
         /* Gets the years and data of this TimeSeries. 
          * Note, you should never cast these to another type, even

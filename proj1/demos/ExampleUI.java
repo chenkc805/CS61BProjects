@@ -1,3 +1,6 @@
+package demos;
+
+import edu.princeton.cs.introcs.StdIn
 /*  If you were to include ExampleUI in a package, you'd need to do the following 
     import statement:
 

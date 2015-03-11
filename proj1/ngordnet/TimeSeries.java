@@ -2,6 +2,7 @@ package ngordnet;
 import java.util.TreeMap;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.NavigableMap;
 
 public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {    
 
@@ -23,12 +24,13 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
     /** Creates a copy of TS, but only between STARTYEAR and ENDYEAR. 
      * inclusive of both end points. */
     public TimeSeries(TimeSeries<T> ts, int startYear, int endYear) {
+        // NavigableMap insert = ts.subMap(startYear, true, endYear, true);
+        // super(insert);
         super(ts.subMap(startYear, true, endYear, true));
-
     }
 
     /** Creates a copy of TS. */
-    public TimeSeries(TimeSeries<T> ts) { 
+    public TimeSeries(TimeSeries<T> ts) {
         super(ts);
     }
 

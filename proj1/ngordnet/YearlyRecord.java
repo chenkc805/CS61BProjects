@@ -17,7 +17,8 @@ public class YearlyRecord {
     private int size;
     private int numberOfWords;
     private boolean rankSorted;
-    private boolean sorted;
+    private boolean wordSorted;
+    private boolean countSorted;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
@@ -25,7 +26,8 @@ public class YearlyRecord {
         this.yrReversed = new HashMap<Integer, ArrayList<String>>();
         this.size = 0;
         rankSorted = false;
-        sorted = false;
+        countSorted = false;
+        wordSorted = false;
     }
 
     /** Creates a YearlyRecord using the given data. */
@@ -43,7 +45,8 @@ public class YearlyRecord {
         }
         this.size = otherCountMap.size();
         rankSorted = false;
-        sorted = false;
+        countSorted = false;
+        wordSorted = false;
     }
 
     /** Returns the number of times WORD appeared in this year. */
@@ -63,9 +66,9 @@ public class YearlyRecord {
         yr.put(word, count);
         size += 1;
         rankSorted = false;
-        sorted = false;
+        countSorted = false;
+        wordSorted = false;
     }
-
     /** Returns the number of words recorded this year. */
     public int size() {
         return size;
@@ -73,7 +76,7 @@ public class YearlyRecord {
 
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
-        if (sorted) {
+        if (wordSorted) {
             return words;
         } else {
             yrReversed = new HashMap<Integer, ArrayList<String>>();
@@ -93,14 +96,14 @@ public class YearlyRecord {
                     words.add(word);
                 }
             }
-            sorted = true;
+            wordSorted = true;
             return words;
         }
     }
 
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() {
-        if (sorted) {
+        if (countSorted) {
             return counts;
         } else {
             yrReversed = new HashMap<Integer, ArrayList<String>>();
@@ -118,7 +121,7 @@ public class YearlyRecord {
             for (Integer key: yrReversedSorted.keySet()) {
                 counts.add(key);
             }
-            sorted = true;
+            countSorted = true;
             return counts;
         }
     }

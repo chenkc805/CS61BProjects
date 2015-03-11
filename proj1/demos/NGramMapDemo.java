@@ -1,6 +1,7 @@
 /** Provides examples of using the NGramMap class.
  *  @author Josh Hug
  */
+package demos;
 import ngordnet.NGramMap;
 import ngordnet.YearlyRecord;
 import ngordnet.TimeSeries;
@@ -8,8 +9,8 @@ import java.util.ArrayList;
 
 public class NGramMapDemo {
     public static void main(String[] args) {
-        NGramMap ngm = new NGramMap("./ngrams/words_that_start_with_q.csv", 
-                                    "./ngrams/total_counts.csv");
+        NGramMap ngm = new NGramMap("./p1data/ngrams/words_that_start_with_q.csv", 
+                                    "./p1data/ngrams/total_counts.csv");
 
 
         System.out.println(ngm.countInYear("quantity", 1736)); // should print 139

@@ -12,6 +12,7 @@ public class NGramMap {
     private HashMap<String, TimeSeries> wordsMap;
     private In words;
     private In counts;
+    private static YearlyRecordProcessor wlp = new WordLengthProcessor();
 
     /** Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME. */
     public NGramMap(String wordsFilename, String countsFilename) {
@@ -122,12 +123,17 @@ public class NGramMap {
 
     /** Provides the summed relative frequency of all WORDS between
       * STARTYEAR and ENDYEAR. */
-    public TimeSeries<Double> summedWeightHistory(Collection<String> words, int startYear, int endYear) {
+    public TimeSeries<Double> summedWeightHistory(Collection<String> words, 
+                                                int startYear, int endYear) {
+        // System.out.println(wordsMap);
         TimeSeries<Double> sum = new TimeSeries<Double>();
         TimeSeries<Double> denominator = new TimeSeries(countsMap, startYear, endYear);
         for (String word: words) {
-            TimeSeries<Double> numerator = new TimeSeries(wordsMap.get(word), startYear, endYear);
-            sum = sum.plus(numerator);
+            TimeSeries<Double> check = wordsMap.get(word);
+            if (check != null) {
+                TimeSeries<Double> numerator = new TimeSeries(check, startYear, endYear);
+                sum = sum.plus(numerator);
+            }
         }
         TimeSeries<Double> result = sum.dividedBy(denominator);
         return result; 
@@ -142,11 +148,32 @@ public class NGramMap {
         return result;
     }
 
-    // /** Provides processed history of all words between STARTYEAR and ENDYEAR as processed
-    //   * by YRP. */
-    // public TimeSeries<Double> processedHistory(int startYear, int endYear,
-    //                                            YearlyRecordProcessor yrp)
+    /** Provides processed history of all words between STARTYEAR and ENDYEAR as processed
+      * by YRP. */
+    public TimeSeries<Double> processedHistory(int startYear, int endYear,
+                                               YearlyRecordProcessor yrp) {
+        TimeSeries<Double> result = new TimeSeries<Double>();
+        for (int year = startYear; year <= endYear; year++) {
+            YearlyRecord check = yearMap.get(year);
+            if (check != null) {
+                result.put(year, wlp.process(check));
+            }
+        }
+        return result;
+    }
 
-    // /** Provides processed history of all words ever as processed by YRP. */
-    // public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) 
+    /** Provides processed history of all words ever as processed by YRP. */
+    public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) {
+        TimeSeries<Double> result = new TimeSeries<Double>();
+        for (Integer year: yearMap.keySet()) {
+            result.put(year, wlp.process(yearMap.get(year)));
+        }
+        return result;
+    }
 }
+
+
+
+
+
+
