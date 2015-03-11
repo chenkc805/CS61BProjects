@@ -44,11 +44,13 @@ public class NgordnetUI {
                         System.out.println(Arrays.toString(help));
                         break;  
                     case "range": 
-                        if (endDate <= startDate) {
+                        int checkStartDate = Integer.parseInt(tokens[0]); 
+                        int checkEndDate = Integer.parseInt(tokens[1]);
+                        if (checkEndDate <= checkStartDate) {
                             System.out.println("Start Date must be before End Date.");
                         } else {
-                            startDate = Integer.parseInt(tokens[0]); 
-                            endDate = Integer.parseInt(tokens[1]);
+                            startDate = checkStartDate; 
+                            endDate = checkEndDate;
                             System.out.println("Start date: " + startDate);
                             System.out.println("End date: " + endDate);
                         }
@@ -76,9 +78,13 @@ public class NgordnetUI {
                         break;
                 }
             } catch (NullPointerException e) {
-                System.out.println("Null Pointer Exception");
+                System.out.println("Not enough arguments. See help for details.");
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Out of bounds of an Array");
+                System.out.println("Out of bounds of an array.");
+            } catch (NumberFormatException e) {
+                System.out.println("Please specifiy a number after your command.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("That word does not exist.");
             }
         }
     }
