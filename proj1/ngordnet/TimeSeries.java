@@ -23,8 +23,6 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
     /** Creates a copy of TS, but only between STARTYEAR and ENDYEAR. 
      * inclusive of both end points. */
     public TimeSeries(TimeSeries<T> ts, int startYear, int endYear) {
-        // NavigableMap insert = ts.subMap(startYear, true, endYear, true);
-        // super(insert);
         super(ts.subMap(startYear, true, endYear, true));
     }
 

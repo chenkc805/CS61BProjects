@@ -11,7 +11,9 @@ public class YearlyRecordDemo {
         YearlyRecord yr = new YearlyRecord();
         yr.put("quayside", 95);        
         yr.put("surrogate", 340);
-        yr.put("merchantman", 181);      
+        yr.put("merchantman", 181);
+        yr.put("bobby", 0);
+        yr.put("johnson", -52);      
         System.out.println(yr.rank("surrogate")); // should print 1
         System.out.println(yr.rank("quayside")); // should print 3
         System.out.println(yr.size()); // should print 3

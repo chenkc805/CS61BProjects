@@ -51,9 +51,9 @@ public class NgordnetUI {
                         } else {
                             startDate = checkStartDate; 
                             endDate = checkEndDate;
-                            System.out.println("Start date: " + startDate);
-                            System.out.println("End date: " + endDate);
                         }
+                        System.out.println("Start date: " + startDate);
+                        System.out.println("End date: " + endDate);
                         break;
                     case "count":
                         count(tokens[0], tokens[1]);
@@ -62,7 +62,7 @@ public class NgordnetUI {
                         hyponyms(tokens[0]);
                         break;
                     case "history":
-                        history(tokens, startDate, endDate);
+                        history(tokens);
                         break;
                     case "hypohist":
                         hypohist(tokens);
@@ -78,13 +78,13 @@ public class NgordnetUI {
                         break;
                 }
             } catch (NullPointerException e) {
-                System.out.println("Not enough arguments. See help for details.");
+                System.out.println(e + ": Probably not enough arguments. See help for details.");
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("Out of bounds of an array.");
             } catch (NumberFormatException e) {
-                System.out.println("Please specifiy a number after your command.");
+                System.out.println(e + ": Please specifiy a number after your command.");
             } catch (IllegalArgumentException e) {
-                System.out.println("That word does not exist.");
+                System.out.println(e + ": That word does not exist.");
             }
         }
     }
@@ -94,7 +94,7 @@ public class NgordnetUI {
         System.out.println(ngm.countInYear(word, yearInt));
     }
 
-    private static void history(String[] words, int start, int end) {
+    private static void history(String[] words) {
         plotter.plotAllWords(ngm, words, startDate, endDate);
     }
 

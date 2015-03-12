@@ -125,7 +125,6 @@ public class NGramMap {
       * STARTYEAR and ENDYEAR. */
     public TimeSeries<Double> summedWeightHistory(Collection<String> words, 
                                                 int startYear, int endYear) {
-        // System.out.println(wordsMap);
         TimeSeries<Double> sum = new TimeSeries<Double>();
         TimeSeries<Double> denominator = new TimeSeries(countsMap, startYear, endYear);
         for (String word: words) {
