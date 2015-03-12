@@ -56,9 +56,6 @@ public class YearlyRecord {
 
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
-        if (count <= 0) {
-            return;
-        }         
         if (yrReversed.containsKey(count)) {
             yrReversed.get(count).add(word);
         } else {
