@@ -11,7 +11,7 @@ public class Asymptotics {
         if (args.length > 1) {
             try {
                 int func = Integer.parseInt(args[0]);
-                int arg = Integer.parseInt(args[1]);
+                long arg = Long.parseLong(args[1]);
                 if (arg < 0) {
                     usage();
                     return;
@@ -41,7 +41,7 @@ public class Asymptotics {
         }
     }
 
-    public static void function1(int n) {
+    public static void function1(long n) {
         ArrayList<Integer> a = new ArrayList<Integer>();
         for (int i = 0; i < n; i++){
             for (int j = 0; j < i; j++) {
@@ -51,7 +51,7 @@ public class Asymptotics {
         }
     }
 
-    public static void function2(int n) {
+    public static void function2(long n) {
         ArrayList<Integer> a = new ArrayList<Integer>();
         int j = 0;
         for (int i = 0; i < n; i++){
@@ -63,7 +63,7 @@ public class Asymptotics {
     }
 
 
-    public static void function3(int n) {
+    public static void function3(long n) {
         ArrayList<Integer> a = new ArrayList<Integer>();
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n*n; j++) {
@@ -75,14 +75,32 @@ public class Asymptotics {
 
     /** Fill in the body of this function so that its running time is
      *  n^(1/2) and so that it returns true if and only if n is prime. */
-    public static boolean function4(int n) {
-	return false; //FIX ME
+    public static boolean function4(long n) {
+	    if (n % 2 == 0 && n != 2) {
+            return false;
+        }
+        for (long i = 3L; i*i < n; i += 2) {
+            if (n % i == 0) {
+                return false;
+            }
+            System.out.println(i);
+        }
+        return true; //FIX ME
     }
 
     /** Fill in the body of this function so that its best case running
      *  time is log(n) and its worst case running time is n. */
-    public static void function5(int n) {
-        //FILL ME IN
+    public static void function5(long n) {
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        if (n % 2 != 0) {
+            for (int i = 0; i < n; i++) {
+                System.out.println(i);
+            }
+        } else {
+            for (double i = 1; i <= n; i = i * 1.001) {
+                System.out.println(i);
+            }
+        }
     }
 
     public static void usage() {
