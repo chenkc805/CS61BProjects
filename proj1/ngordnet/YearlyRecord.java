@@ -63,13 +63,11 @@ public class YearlyRecord {
             putThis.add(word);
             yrReversed.put(count, putThis);
         }
-        if (count > 0) {
-            yr.put(word, count);
-            size += 1;
-            rankSorted = false;
-            countSorted = false;
-            wordSorted = false;
-        }
+        yr.put(word, count);
+        size += 1;
+        rankSorted = false;
+        countSorted = false;
+        wordSorted = false;
     }
     /** Returns the number of words recorded this year. */
     public int size() {
