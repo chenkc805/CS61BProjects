@@ -83,13 +83,14 @@ Experimentally determined running time:
 Insertion sort with array:        O(_n^2__)
 Insertion sort with linked list:  O(_n^3.3__)
 
-5. Initial guess: O(___)
+5. Initial guess: O(_n^0.5__)
 
 Data:             n               time
+			100000 				0.014 
+			1000000 			0.238
+			5000000 			3.312		
+			10000000 			8.148
 
-
-
-
-Experimentally determined running time: O(___)
+Experimentally determined running time: O(_n^1.38__)
 
 
