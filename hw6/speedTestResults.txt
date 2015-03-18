@@ -1,0 +1,45 @@
+#################
+###  Ordered  ###
+#################
+
+Data Structure 	n	time
+BSTMap	10000	2.25
+BSTMap	25000	10.97
+BSTMap	50000	Overflow
+BSTMap	5000	0.44
+BSTMap	15000	6.8
+BSTMap	2500	0.11
+TreeMap	10000	0.02
+TreeMap	100000	0.09
+TreeMap	50000	0.05
+TreeMap	1000000	1.33
+TreeMap	5000000	8.83
+TreeMap	10000000	21.14
+ULLMap	10000	0.72
+ULLMap	25000	6.57
+ULLMap	50000	Overflow
+ULLMap	20000	3.99
+ULLMap	5000	0.24
+
+################
+###  Random  ###
+################
+
+Data Structure 	n	time	L
+BSTMap	10000	0.01	5
+BSTMap	100000	0.14	5
+BSTMap	50000	0.06	5
+BSTMap	1000000	1.96	5
+BSTMap	5000000	14.67	5
+BSTMap	10000000	27	5
+TreeMap	10000	0.01	5
+TreeMap	100000	0.1	5
+TreeMap	50000	0.04	5
+TreeMap	1000000	1.37	5
+TreeMap	5000000	9.77	5
+TreeMap	10000000	24.11	5
+ULLMap	10000	0.48	5
+ULLMap	100000	Overflow	5
+ULLMap	50000	Overflow	5
+ULLMap	20000	2.18	5
+ULLMap	5000	0.11	5

@@ -1,0 +1,8 @@
+1 F because B might be completely unbalanced, in which case it'd be O(n) time
+2 F because K might be the same as the first node, in which case it would be O(1) time
+3 F because K might be the same as the first node, in which case it would be O(1) time
+4 T in the worst case, B is completely unbalanced, and therefore we would have to traverse the entire tree to put K at the end
+5 T the worst case is O(n), which is definitely faster than O(n^2)
+6 T for put and containsKey, each operate at log time. That means for both to run, each run at 2log time. 
+7 T because even though K might be constant time, that means C will not be constant time since they are not equal. The fastest that running both of them will be log(n), so the operation is $\Omega(log(N))$
+8 O(n-z) because the "else if" statement takes the longest time. If z == 1 and b is a spindly tree with 100 nodes to the left of the highest root node, there then it would take 99 operations. 
