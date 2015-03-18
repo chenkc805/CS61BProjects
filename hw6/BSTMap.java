@@ -1,9 +1,7 @@
-import java.util.Iterator;
 import java.util.Set;
-import java.lang.Comparable;
 import java.util.LinkedList;
 
-public class BSTMap<K extends Comparable<K>, V> implements Map61B<K,V> {
+public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     int size = 0;
     Node node;
@@ -171,3 +169,4 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K,V> {
         
     }
 }
+
