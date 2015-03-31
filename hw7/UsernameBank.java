@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 import java.lang.StringBuilder;
 import java.util.Random;
 
@@ -12,10 +13,10 @@ public class UsernameBank {
     private HashMap<String, Integer> invalidEmails;
 
     public UsernameBank() {
-        usernameBank = new HashMap<String, String>;
-        emailBank = new HashMap<String, String>;
-        invalidUsernames = new HashMap<String, Integer>;
-        invalidEmails = new HashMap<String, Integer>;
+        usernameBank = new HashMap<String, String>();
+        emailBank = new HashMap<String, String>();
+        invalidUsernames = new HashMap<String, Integer>();
+        invalidEmails = new HashMap<String, Integer>();
     }
 
     public void generateUsername(String username, String email) {
@@ -27,7 +28,7 @@ public class UsernameBank {
             throw new IllegalArgumentException("Your username must be either 2 or 3 characters long.");
         }
         for (int i = 0; i < len; i++)  {
-            if (!Character.isLetterOrDigit(reqName.charAt(i))) {
+            if (!Character.isLetterOrDigit(username.charAt(i))) {
                 throw new IllegalArgumentException("This username contains invalid characters. All characters must be alpha-numeric.");
             }
         }
@@ -36,6 +37,18 @@ public class UsernameBank {
         }
         usernameBank.put(username, email);
         emailBank.put(email, username);
+    }
+
+    private static int randInt(int min, int max) {
+        // NOTE: Usually this should be a field rather than a method
+        // variable so that it is not re-seeded every call.
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
     }
 
     // private boolean validUsername(String username) {
@@ -101,10 +114,10 @@ public class UsernameBank {
     private boolean checkEmail(String userEmail) {
         int count = 0;
         for (int i = 0; i < userEmail.length(); i++) {
-            if (i == 0 && userEmail.charAt(i).equals("@")) {
+            if (i == 0 && Character.toString(userEmail.charAt(i)).equals("@")) {
                 return false;
             }
-            if (i != 0 && userEmail.charAt(i).equals("@")) {
+            if (i != 0 && Character.toString(userEmail.charAt(i)).equals("@")) {
                 count++;
             }
         }
