@@ -2,6 +2,8 @@ import java.util.HashMap; // Import Java's HashMap so we can use it
 
 public class FibonacciMemo {
 
+    private static HashMap<Integer, Integer> memo = new HashMap<Integer, Integer>();
+
     /**
      * The classic recursive implementation with no memoization. Don't care
      * about graceful error catching, we're only interested in performance.
@@ -24,8 +26,15 @@ public class FibonacciMemo {
      * @return The nth fibonacci number
      */
     public static int fibMemo(int n) {
-        // YOUR CODE HERE
-        return 0;
+        if (n <= 1) {
+            return n;
+        } else if (memo.containsKey(n)) {
+            return memo.get(n);
+        } else {
+            int result = fibMemo(n - 2) + fibMemo(n - 1);
+            memo.put(n, result);
+            return result;
+        }
     }
 
     /**
@@ -49,6 +58,7 @@ public class FibonacciMemo {
         System.out.println("2: " + FibonacciMemo.fibNoMemo(2));
         System.out.println("3: " + FibonacciMemo.fibNoMemo(3));
         System.out.println("4: " + FibonacciMemo.fibNoMemo(4));
+        System.out.println("47: " + FibonacciMemo.fibMemo(47));
 
         // 46th Fibonacci = 1,836,311,903
         // 47th Fibonacci = 2,971,215,073
