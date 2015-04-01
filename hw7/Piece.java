@@ -91,7 +91,7 @@ public class Piece {
             int fireInt = 0;
         }
         int result = xInt + yInt + kingInt + bombInt + shieldInt + fireInt;
-        return 5; // YOUR CODE HERE
+        return result; // YOUR CODE HERE
     }
 
     public static void main(String[] args) {
