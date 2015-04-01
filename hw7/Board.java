@@ -33,6 +33,6 @@ public class Board {
                 result += pieces[i][j].hashCode();
             }
         }
-        return 6; // YOUR CODE HERE
+        return result; // YOUR CODE HERE
     }
 }
