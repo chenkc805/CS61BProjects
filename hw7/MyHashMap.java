@@ -61,6 +61,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     private LinkedList<V> getChain(K key) {
+        if (key == null) {
+            return null;
+        }
         // System.out.println("GETCHAIN Array Size: " + _arraySize);
         int code = key.hashCode();
         int position = key.hashCode() % _arraySize;
@@ -80,6 +83,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Associates the specified value with the specified key in this map. 
      * Should run on average constant time when called on a HashMap. */
     public void put(K key, V value) {
+        if (key == null) {
+            return;
+        }
         if (containsKey(key)) {
             LinkedList<V> chain = getChain(key);
             chain.add(value);
@@ -96,17 +102,22 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             _hs.ensureCapacity(_arraySize * 2);
             _arraySize = _arraySize * 2;
         }
+        cached = false;
     }
 
     /* Removes the mapping for the specified key from this map if present. 
      * Should run on average constant time when called on a HashMap. */
     public V remove(K key) {
+        if (key == null) {
+            return;
+        }
         if (containsKey(key)) {
             int code = key.hashCode();
             int position = key.hashCode() % _arraySize;
             size -= 1;
             Node<K, V> node = _hs.remove(position);
             LinkedList<V> chain = node._list;
+            _keySet.remove(key);
             return chain.peekLast();
         } 
         return null;
@@ -116,6 +127,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * the specified value. Should run on average constant time when called on 
      * a HashMap. */
     public V remove(K key, V value) {
+        if (key == null) {
+            return;
+        }
         LinkedList<V> list = this.getChain(key);
         if (list.remove(value)) {
             return value;
