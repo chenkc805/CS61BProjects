@@ -65,7 +65,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         int code = key.hashCode();
         int position = key.hashCode() % _arraySize;
         Node doesItContain = _hs.get(position);
-        System.out.println("DOESITCONTAIN: " + doesItContain);
+        // System.out.println("DOESITCONTAIN: " + doesItContain);
         if (doesItContain == null) {
             return null;
         }
@@ -92,7 +92,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         size += 1;
         float f = (float) size / _arraySize;
         if (f > _loadFactor) {
-            System.out.println(">>> RESIZING <<<");
+            // System.out.println(">>> RESIZING <<<");
             _hs.ensureCapacity(_arraySize * 2);
             _arraySize = _arraySize * 2;
         }
