@@ -57,6 +57,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public V get(K key) {
         LinkedList<V> chain = getChain(key);
+        if (chain == null) {
+            return null;
+        }
         return chain.peekLast();
     }
 
@@ -109,7 +112,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * Should run on average constant time when called on a HashMap. */
     public V remove(K key) {
         if (key == null) {
-            return;
+            return null;
         }
         if (containsKey(key)) {
             int code = key.hashCode();
@@ -117,7 +120,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             size -= 1;
             Node<K, V> node = _hs.remove(position);
             LinkedList<V> chain = node._list;
-            _keySet.remove(key);
+            if (_keySet != null) {
+                _keySet.remove(key);
+            }
             return chain.peekLast();
         } 
         return null;
@@ -128,7 +133,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * a HashMap. */
     public V remove(K key, V value) {
         if (key == null) {
-            return;
+            return null;
         }
         LinkedList<V> list = this.getChain(key);
         if (list.remove(value)) {
@@ -144,7 +149,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
         _keySet = new HashSet<K>();
         for (Node node : _hs) {
-            if (!_keySet.contains(node._key)) {
+            if (node != null && !_keySet.contains(node._key)) {
                 _keySet.add((K) node._key);
             }
         }
