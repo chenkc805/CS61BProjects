@@ -73,17 +73,6 @@ public class Username {
         //database.put(reqName, null);
     }
 
-    public boolean validUsername(String username) {
-        if (len < 2 || len > 3) {
-            return false;
-        }
-        for (int i = 0; i < len; i++)  {
-            if (!Character.isLetterOrDigit(reqName.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
     // public String getUsername() {
     //     return usrname;
     // }
