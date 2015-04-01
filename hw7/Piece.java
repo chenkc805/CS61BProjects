@@ -15,6 +15,8 @@ public class Piece {
     /** Keeps track of the board to which this piece belongs.
      *  Necessary for callbacks. */
 
+    private int kingInt, bombInt, shieldInt, fireInt;
+
     /** Returns whether or not this piece is on the Fire team. */
     public boolean isFire() {
         return side;
@@ -61,11 +63,34 @@ public class Piece {
 
     @Override
     public boolean equals(Object o) {
-        return false; // YOUR CODE HERE
+        return hashCode() == o.hashCode();
     }
 
     @Override
     public int hashCode() {
+        int xInt = x << 12;
+        int yInt = y << 7;
+        if (isKing()) {
+            int kingInt = 1;
+        } else {
+            int kingInt = 0;
+        }
+        if (isBomb()) {
+            int bombInt = 2;
+        } else {
+            int bombInt = 0;
+        }
+        if (isShield()) {
+            int shieldInt = 4;
+        } else {
+            int shieldInt = 0;
+        }
+        if (isFire()) {
+            int fireInt = 8;
+        } else {
+            int fireInt = 0;
+        }
+        int result = xInt + yInt + kingInt + bombInt + shieldInt + fireInt;
         return 5; // YOUR CODE HERE
     }
 
