@@ -135,7 +135,6 @@ public class Gitlet implements Serializable {
             directory.mkdir();
             (new File(".gitlet/commits/")).mkdir();
             (new File(".gitlet/commits/0/")).mkdir();
-            // writeSerObject(master, "./gitlet/commits", iD);
             iD++;
         } else {
             System.out.println("A gitlet version control system already exists in the current directory.");
@@ -225,10 +224,12 @@ public class Gitlet implements Serializable {
      */
     public void commit(String message) {
         HashMap<String, File> toBeCommitted = new HashMap<String, File>();
-        for (String stagedNames : staged.keySet()) {
-            toBeCommitted.put(stagedNames, staged.get(stagedNames));
+        for (String stagedName : staged.keySet()) {
+            toBeCommitted.put(stagedName, staged.get(stagedName));
+            writeCommitFile(stagedName);
         }
         master = new GitletNode(toBeCommitted, getTime(), message, iD, master);
+        (new File(".gitlet/commits/" + iD + "/")).mkdir();
         iD++;
     }
 
@@ -346,14 +347,30 @@ public class Gitlet implements Serializable {
             throw new IllegalArgumentException("File name must end with .ser.");
         }
         try {
-            File stateDir = new File(".gitlet/add");
-            if (!stateDir.exists()) {
-                stateDir.mkdir();
-            }
-
             FileOutputStream fout = new FileOutputStream(fileName);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(this);
+            oos.close();
+        } catch (IOException e) {
+            System.out.println("Could not write world state: " + e);
+        }
+    }
+
+        /**
+     * Write a .ser file containing a world state.
+     * @param  fileName to write to
+     * Credit to HugLife.java from Lab 9
+     */
+    private void writeCommitFile(String fileName) {
+        try {
+            FileOutputStream fout = new FileOutputStream(fileName);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            String dirName = "./gitlet/commits/" + iD + "/";
+            File dir = new File (dirName);
+            System.out.println(dirName);
+            System.out.println(fileName);
+            File actualFile = new File(dir, fileName);
+            oos.writeObject(actualFile);
             oos.close();
         } catch (IOException e) {
             System.out.println("Could not write world state: " + e);
