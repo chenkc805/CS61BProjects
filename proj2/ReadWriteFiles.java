@@ -1,28 +1,13 @@
-import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.lang.System;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.ListIterator;
-
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.File;
-import java.nio.file.FileSystem;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.IOException;
-import java.io.FileNotFoundException;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ReadWriteFiles {
 
@@ -56,10 +41,13 @@ public class ReadWriteFiles {
         }
     }
 
-    public static void writeCommitFile(String fileName, int iD) {
+    public static void writeCommitFile(String fileName, String branchName, int iD) {
         try {
             File file = new File(fileName);
-            Files.copy(Paths.get(fileName), Paths.get(".gitlet/commits/" + iD + "/" + file.getName()));
+            (new File(".gitlet/commits/" + branchName + "/" + iD 
+                + "/" + file.getParent())).mkdirs();
+            Files.copy(Paths.get(fileName), Paths.get(".gitlet/commits/" 
+                + branchName + "/" + iD + "/" + fileName));
         } catch (IOException e) {
             System.out.println("writeCommitFile");
             System.out.println("Could not write world state: " + e);
@@ -72,13 +60,13 @@ public class ReadWriteFiles {
      * @return a newly initialized HugLife
      * Credit to HugLife.java from Lab 9
      */
-    public static Gitlet readSerFile(String fileName) {
-        if (!fileName.endsWith(".ser")) {
+    public static Gitlet readSerFile(String pathName) {
+        if (!pathName.endsWith(".ser")) {
             throw new IllegalArgumentException("File name must end with .ser.");
         }
 
         try {
-            FileInputStream fin = new FileInputStream(fileName);
+            FileInputStream fin = new FileInputStream(pathName);
             ObjectInputStream ois = new ObjectInputStream(fin);
             Object historyObject = ois.readObject();
             ois.close();
@@ -90,22 +78,11 @@ public class ReadWriteFiles {
         }
     }
 
-    public static File readGenericFile(String fileName) {
+    public static File readGenericFile(String pathName) {
         try {
-            System.out.println("where");
-
-            FileInputStream fin = new FileInputStream(fileName);
-            System.out.println("where");
-            ObjectInputStream ois = new ObjectInputStream(fin);
-            System.out.println("where");
-            Object historyObject = ois.readObject();
-            System.out.println("historyObject: " + historyObject);
-            ois.close();
-            File result = (File) historyObject; 
+            File result = Paths.get(pathName).toFile();
             return result; 
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Whoa Error");
-            e.printStackTrace();
+        } catch (NullPointerException e) {
             return null;
         }
     }
