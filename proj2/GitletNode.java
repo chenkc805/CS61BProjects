@@ -22,46 +22,71 @@ public class GitletNode implements Serializable {
         _branch = branch;
     }
 
-    public GitletNode(GitletNode g) {
-        _files = g._files;
-        _commitMessage = g._commitMessage;
-        _iD = g._iD;
-        _next = g._next;
-        _timeStamp = g._timeStamp;
-        _idMap = g._idMap;
-        _branch = g._branch;
+    /* Retrieves the files in this node. */
+    public HashMap<String, File> getFiles() {
+        return _files;
     }
 
-    /* Retrieves the commit message */
+    /* Retrieves the IDs of files in this node. */
+    public HashMap<String, Integer> getIDMap() {
+        return _idMap;
+    }
+
+    /* Retrieves the commit message. */
     public String getCommitMessage() {
         return _commitMessage;
     }
 
-    public boolean hasNext() {
-        return _next != null;
-    }
-
+    /* Retrieves the ID of this node. */
     public int getID() {
         return _iD;
     }
 
+    /* Retrieves branch that this node is in. */
     public String getBranchName() {
         return _branch;
     }
 
-    public String getFullName() {
-        return _branch + "/" + _iD;
-    }
-
+    /* Retrieves the next node attached to this node. */
     public GitletNode next() {
         return _next;
     }
 
-    HashMap<String, File> _files;
-    String _commitMessage;
-    String _timeStamp;
-    String _branch;
-    GitletNode _next;
-    int _iD;
-    HashMap<String, Integer> _idMap;
+    /* Retrieves the timestamp. */
+    public String getTimeStamp() {
+        return _timeStamp;
+    }
+
+    /* Checks if this node has a NEXT node. */
+    public boolean hasNext() {
+        return _next != null;
+    }
+
+    /* Retrieves the full filepath for this commit. */
+    public String getFullName() {
+        return _branch + "/" + _iD;
+    }
+
+    /* Retrieves the next node attached to this node. */
+    public void setCommitMessage(String message) {
+        _commitMessage = message;
+    }
+
+    /* Retrieves the next node attached to this node. */
+    public void setID(int id) {
+        _iD = id;
+    }
+
+    /* Changes the next node attached to this node. */
+    public void setNext(GitletNode next) {
+        _next = next;
+    }
+
+    private HashMap<String, File> _files;
+    private HashMap<String, Integer> _idMap;
+    private String _timeStamp;
+    private String _commitMessage;
+    private int _iD;
+    private String _branch;
+    private GitletNode _next;
 }

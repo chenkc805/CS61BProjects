@@ -213,9 +213,9 @@ public class Gitlet implements Serializable {
                 return;
             } 
             /* Checks if the headNode contains FILENAME */
-            if (current._files.containsKey(fileName)) {
+            if (current.getFiles().containsKey(fileName)) {
                 byte[] fileNameData = Files.readAllBytes(Paths.get(fileName));
-                byte[] headNodeData = Files.readAllBytes(current._files.get(fileName).toPath());
+                byte[] headNodeData = Files.readAllBytes(current.getFiles().get(fileName).toPath());
                 if (Arrays.equals(fileNameData, headNodeData)) {
                     System.out.println("File has not been modified since the last commit.");
                     return;
@@ -247,15 +247,15 @@ public class Gitlet implements Serializable {
             return;
         }
         (new File(path)).mkdir();
-        if (current._files == null) {
+        if (current.getFiles() == null) {
             toBeCommitted = new HashMap<String, File>();
         } else {
-            toBeCommitted = current._files;
+            toBeCommitted = current.getFiles();
         }
-        if (current._idMap == null) {
+        if (current.getIDMap() == null) {
             toBeCommittedIDs = new HashMap<String, Integer>();
         } else {
-            toBeCommittedIDs = current._idMap;
+            toBeCommittedIDs = current.getIDMap();
         }
         if (!removed.isEmpty()) {
             for (String rm : removed) {
@@ -296,10 +296,10 @@ public class Gitlet implements Serializable {
             System.out.println("No reason to remove the file.");
             return;
         }
-        if (current._files == null) {
+        if (current.getFiles() == null) {
             return;
         }
-        if (current._files.get(fileName) == null) {
+        if (current.getFiles().get(fileName) == null) {
             System.out.println("No reason to remove the file.");
             return;
         }
@@ -324,9 +324,9 @@ public class Gitlet implements Serializable {
      */
     private void oneLog(GitletNode pointer) {
         System.out.println("====");
-        System.out.println("Commit " + pointer._iD + ".");
-        System.out.println(pointer._timeStamp);
-        System.out.println(pointer._commitMessage);
+        System.out.println("Commit " + pointer.getID() + ".");
+        System.out.println(pointer.getTimeStamp());
+        System.out.println(pointer.getCommitMessage());
     }
 
     /**
@@ -341,10 +341,7 @@ public class Gitlet implements Serializable {
                 if (logged.contains(pointer.getBranchName() + pointer.getID())) {
                     break;
                 } else {
-                    System.out.println("====");
-                    System.out.println("Commit " + pointer._iD + ".");
-                    System.out.println(pointer._timeStamp);
-                    System.out.println(pointer._commitMessage);
+                    oneLog(pointer);
                     logged.add(pointer.getBranchName() + pointer.getID());
                     pointer = pointer.next();
                 }
@@ -412,7 +409,7 @@ public class Gitlet implements Serializable {
      */ 
     public void checkoutFile(String fileName) {
         try {
-            int id = current._idMap.get(fileName);
+            int id = current.getIDMap().get(fileName);
             if (id < current.getID()) {
                 checkoutID(id, fileName);
                 return;
@@ -443,7 +440,7 @@ public class Gitlet implements Serializable {
         try {
             GitletNode pointer = allCommits.get(commitID);
             while (pointer != null) {
-                int id = pointer._idMap.get(fileName);
+                int id = pointer.getIDMap().get(fileName);
                 if (id < commitID) {
                     checkoutID(id, fileName);
                 } else {
@@ -483,10 +480,10 @@ public class Gitlet implements Serializable {
             GitletNode pointer = current;
             current = branches.get(branch);
             branchName = branch;
-            if (current._files == null) {
+            if (current.getFiles() == null) {
                 return;
             }
-            for (String fileName : pointer._files.keySet()) {
+            for (String fileName : pointer.getFiles().keySet()) {
                 checkoutFile(fileName);
             }
         } catch (NullPointerException e) {
@@ -539,7 +536,7 @@ public class Gitlet implements Serializable {
         if (node == null) {
             System.out.println("No commit with that id exists.");
         } else {
-            for (String fileName : node._files.keySet()) {
+            for (String fileName : node.getFiles().keySet()) {
                 checkoutID(id, fileName);
             }
             current = node;
@@ -569,10 +566,10 @@ public class Gitlet implements Serializable {
             SplitNode s = new SplitNode(current, otherHead);
             int splitID = s.getSplitNodeID();
 
-            HashMap<String, File> currentFiles = current._files;
-            HashMap<String, Integer> currentIDs = current._idMap;
-            HashMap<String, File> otherFiles = otherHead._files;
-            HashMap<String, Integer> otherIDs = otherHead._idMap;
+            HashMap<String, File> currentFiles = current.getFiles();
+            HashMap<String, Integer> currentIDs = current.getIDMap();
+            HashMap<String, File> otherFiles = otherHead.getFiles();
+            HashMap<String, Integer> otherIDs = otherHead.getIDMap();
             for (String fileName : otherFiles.keySet()) {
                 int otherid = otherIDs.get(fileName);
                 int id = -1;
@@ -632,7 +629,7 @@ public class Gitlet implements Serializable {
         }
         while (!pointerIDs.isEmpty()) {
             GitletNode movingNode = allCommits.get(pointerIDs.pollLast());
-            GitletNode newNode = new GitletNode(movingNode._files, movingNode._idMap, getTime(),
+            GitletNode newNode = new GitletNode(movingNode.getFiles(), movingNode.getIDMap(), getTime(),
                 movingNode.getCommitMessage(), iD, branch, otherHead);
             otherHead = newNode;
             iD++;
@@ -695,7 +692,7 @@ public class Gitlet implements Serializable {
                 answer = br.readLine();
             }
             if (answer.equals("c")) {
-                GitletNode newNode = new GitletNode(movingNode._files, movingNode._idMap, getTime(),
+                GitletNode newNode = new GitletNode(movingNode.getFiles(), movingNode.getIDMap(), getTime(),
                     movingNode.getCommitMessage(), iD, branch, otherHead);
                 otherHead = newNode;
                 iD++;
@@ -703,7 +700,7 @@ public class Gitlet implements Serializable {
                 System.out.println("Please enter a new message for this commit.");
                 br = new BufferedReader(new InputStreamReader(System.in));
                 String message = br.readLine();
-                GitletNode newNode = new GitletNode(movingNode._files, movingNode._idMap, getTime(),
+                GitletNode newNode = new GitletNode(movingNode.getFiles(), movingNode.getIDMap(), getTime(),
                     message, iD, branch, otherHead);
                 otherHead = newNode;
                 iD++;                
