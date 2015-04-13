@@ -91,7 +91,6 @@ public class GitletPublicTest {
         gitlet("add", dog1FileName);
         gitlet("commit", "first commit");
         String printedOutput = gitlet("add", dog1FileName);
-        System.out.println(dog1FileName);
         assertEquals("File has not been modified since the last commit.\n", printedOutput);
     }
 
@@ -170,17 +169,6 @@ public class GitletPublicTest {
         assertEquals(yingText, getText(yingFileName));
     }
 
-    // If file doesn't exist in current branch
-    // @Test
-    // public void testBasicCheckout3() {
-    //     String yingFileName = TESTING_DIR + "ying.txt";
-    //     String yingText = "Ying says hi.";
-    //     createFile(yingFileName, yingText);
-    //     gitlet("init");
-    //     String output = gitlet("checkout", yingFileName);
-    //     assertEquals("File does not exist in the most recent commit, or no such branch exists.\n", output);
-    // }
-
     /**
      * Tests that log prints out commit messages in the right order. Involves
      * init, add, commit, and log.
@@ -217,14 +205,15 @@ public class GitletPublicTest {
         gitlet("add", wugFileName);
         gitlet("commit", "added wug3");
         writeFile(wugFileName, "poop");
-        String log = gitlet("log");
-
-        String logContent = gitlet("log");
-        assertArrayEquals(new String[] { "added wug3", "added wug2","added wug1", "initial commit" },
-                extractCommitMessages(logContent));
 
         gitlet("checkout", "2", wugFileName);
         assertEquals("This is not a wug.", getText(wugFileName));
+
+        gitlet("checkout", "1", wugFileName);
+        assertEquals("This is a wug.", getText(wugFileName));
+
+        gitlet("checkout", "3", wugFileName);
+        assertEquals("This is DEFINITELY not a wug.", getText(wugFileName));
     }
 
     @Test
@@ -249,6 +238,21 @@ public class GitletPublicTest {
     }
 
     @Test
+    public void testRemove3() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String testFileName = TESTING_DIR + "test.txt";
+        String wugText = "This is a wug.";
+        String testText = "This is a test.";
+        createFile(testFileName, testText);
+        createFile(wugFileName, wugText);
+        gitlet("init");
+        gitlet("add", wugFileName);
+        gitlet("rm", wugFileName);
+        gitlet("commit", "added wug1");
+        gitlet("add", wugFileName);
+    }
+
+    @Test
     public void testFind() {
         String wugFileName = TESTING_DIR + "wug.txt";
         String wugText = "This is a wug.";
@@ -262,13 +266,13 @@ public class GitletPublicTest {
         writeFile(wugFileName, "This is DEFINITELY not a wug.");
         gitlet("add", wugFileName);
         String content = gitlet("find", "initial commit");
-        assertEquals("0", content);
+        assertEquals("0\n", content);
 
         content = gitlet("find", "added wug1");
-        assertEquals("1", content);
+        assertEquals("1\n", content);
 
         content = gitlet("find", "WOOOW");
-        assertEquals("Found no commit with that message.", content);
+        assertEquals("Found no commit with that message.\n", content);
     }
 
     @Test
@@ -375,6 +379,81 @@ public class GitletPublicTest {
         gitlet("rm", omgFileName);
         String output = gitlet("commit", "gurrrrrrl");
         assertEquals("No changes added to the commit.\n", output);
+    }
+
+    @Test
+    public void testMerge() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String testFileName = TESTING_DIR + "test.txt";
+        String test2FileName = TESTING_DIR + "test2.txt";
+        String wugText = "This is a wug.";
+        String testText = "This is a test.";
+        String test2Text = "This is a TESTUH.";
+        createFile(testFileName, testText);
+        createFile(wugFileName, wugText);
+        createFile(test2FileName, test2Text);
+        gitlet("init");
+        gitlet("add", wugFileName);
+        System.out.println("FIRST COMMIT: " + gitlet("commit", "First")); 
+        gitlet("branch", "branch1");
+        gitlet("checkout", "branch1");
+        gitlet("add", testFileName);
+        System.out.println(gitlet("commit", "Second commit"));
+        writeFile(wugFileName, "This is not a wug.");
+        writeFile(testFileName, "This is not a test.");
+        gitlet("add", wugFileName);
+        gitlet("add", testFileName);
+        gitlet("commit", "branch1 commit");
+        gitlet("checkout", "master");
+        System.out.println(gitlet("merge", "branch1"));
+        
+        assertEquals("This is not a test.", getText(testFileName));
+        assertEquals("This is not a wug.", getText(wugFileName));
+    }
+
+    @Test
+    public void testRebase() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String wugText = "This is a wg";
+        createFile(wugFileName, wugText);
+        gitlet("init");
+        gitlet("add", wugFileName);
+        gitlet("commit", "First");
+
+        writeFile(wugFileName, "This is a wug");
+        gitlet("add", wugFileName);
+        gitlet("commit", "Second");
+        gitlet("branch", "branch1");
+
+        writeFile(wugFileName, "This is a wug.");
+        gitlet("add", wugFileName);
+        gitlet("commit", "Third");
+
+        writeFile(wugFileName, "This is a wug...");
+        gitlet("add", wugFileName);
+        gitlet("commit", "Fourth");
+        gitlet("checkout", "branch1");
+
+        writeFile(wugFileName, "This is a wug!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "Fifth");
+        gitlet("branch", "branch2");
+
+        writeFile(wugFileName, "This is a wug!!!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "Sixth");
+        gitlet("checkout", "branch2");
+
+        writeFile(wugFileName, "This is a wug??!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "Seventh");
+        gitlet("checkout", "branch1");
+        
+        // System.out.println(gitlet("rebase", "master"));
+        // writeFile(wugFileName, "This is a wug??!");
+        // gitlet("checkout", wugFileName);
+        
+        assertEquals("This is a wug!!!", getText(wugFileName));
     }
 
 

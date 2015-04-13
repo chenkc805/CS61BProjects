@@ -65,6 +65,7 @@ public class Gitlet implements Serializable {
     /* Gives the date and time of a commit. */
     String dateAndTime;
 
+    /* List of items to be removed */
     ArrayList<String> removed;
 
     /* The most recent ID */
@@ -265,16 +266,17 @@ public class Gitlet implements Serializable {
                 toBeCommitted.remove(rm);
             }
         }
+        HashMap<String, File> commitFiles = new HashMap<String, File>(toBeCommitted);
+        HashMap<String, Integer> commitIDs = new HashMap<String, Integer>(toBeCommittedIDs);
         for (String fileName : staged.keySet()) {
             ReadWriteFiles.writeCommitFile(fileName, branchName, iD);
             File commitThis = ReadWriteFiles.readGenericFile(".gitlet/commits/" 
                 + branchName + "/" + iD + "/" + fileName);
-            toBeCommitted.put(fileName, commitThis);
-            toBeCommittedIDs.put(fileName, iD);
+            commitFiles.put(fileName, commitThis);
+            commitIDs.put(fileName, iD);
         }
-        current = new GitletNode(new HashMap<String, File>(toBeCommitted), 
-            new HashMap<String, Integer>(toBeCommittedIDs), getTime(), 
-            message, iD, branchName, current);
+        current = new GitletNode(commitFiles, commitIDs, getTime(), message, iD, 
+            branchName, current);
         branches.put(branchName, current);
         allCommits.put(current.getID(), current);
         staged.clear();
@@ -359,12 +361,12 @@ public class Gitlet implements Serializable {
         GitletNode pointer = current;
         while (pointer != null) {
             if (pointer.getCommitMessage().equals(message)) {
-                System.out.print(pointer.getID());
+                System.out.println(pointer.getID());
                 return;
             }
             pointer = pointer.next();
         }
-        System.out.print("Found no commit with that message.");
+        System.out.println("Found no commit with that message.");
     }
 
     /**
@@ -438,22 +440,18 @@ public class Gitlet implements Serializable {
      */
     public void checkoutID(int commitID, String fileName) {
         try {
-            GitletNode pointer = current;
+            GitletNode pointer = allCommits.get(commitID);
             while (pointer != null) {
-                if (pointer.getID() == commitID) {
-                    int id = pointer._idMap.get(fileName);
-                    if (id < commitID) {
-                        checkoutID(id, fileName);
-                        return;
-                    } 
+                int id = pointer._idMap.get(fileName);
+                if (id < commitID) {
+                    checkoutID(id, fileName);
+                } else {
                     File file = new File(fileName);
                     Path sourcePath = Paths.get(".gitlet/commits/" 
                         + pointer.getFullName() + "/" + file.getPath());
                     Files.copy(sourcePath, Paths.get(fileName), REPLACE_EXISTING); 
-                    return;
-                } else {
-                    pointer = pointer.next();
                 }
+                return;
             }
             System.out.println("No commit with that id exists.");
         } catch (NullPointerException e) {
@@ -481,12 +479,13 @@ public class Gitlet implements Serializable {
                 System.out.println("No need to checkout the current branch.");
                 return;
             }
+            GitletNode pointer = current;
             current = branches.get(branch);
             branchName = branch;
             if (current._files == null) {
                 return;
             }
-            for (String fileName : current._files.keySet()) {
+            for (String fileName : pointer._files.keySet()) {
                 checkoutFile(fileName);
             }
         } catch (NullPointerException e) {
@@ -566,7 +565,8 @@ public class Gitlet implements Serializable {
             }
 
             /* Find the split node */
-            int splitID = findSplitNode(branch);
+            SplitNode s = new SplitNode(current, otherHead);
+            int splitID = s.getSplitNodeID();
 
             HashMap<String, File> currentFiles = current._files;
             HashMap<String, Integer> currentIDs = current._idMap;
@@ -574,18 +574,24 @@ public class Gitlet implements Serializable {
             HashMap<String, Integer> otherIDs = otherHead._idMap;
             for (String fileName : otherFiles.keySet()) {
                 int otherid = otherIDs.get(fileName);
-                if (otherid > splitID) {
-                    int id = currentIDs.get(fileName);
-                    if (id <= splitID) {
-                        checkoutID(id, fileName);
-                    } else {
-                        Files.copy(Paths.get(".gitlet/commits/" + otherHead.getFullName()
-                            + "/" + fileName), Paths.get(fileName + ".conflicted"));
+                int id = -1;
+                if (currentIDs.containsKey(fileName)) {
+                    id = currentIDs.get(fileName);
+                    if (otherid > splitID) {
+                        if (id <= splitID) {
+                            checkoutID(otherid, fileName);
+                        } else {
+                            File file = new File(".gitlet/commits/" + otherHead.getFullName()
+                                + "/" + fileName);
+                            if (file.exists()) {
+                                Files.copy(file.toPath(), Paths.get(fileName + ".conflicted"));
+                            }
+                        }
                     }
-                } 
+                }
             }
         } catch (IOException e) {
-            return;
+            e.printStackTrace();
         }
     }
 
@@ -607,7 +613,7 @@ public class Gitlet implements Serializable {
             return;
         }
         GitletNode pointer = current;
-        GitletNode otherNode = branches.get(branch);
+        GitletNode otherNode = otherHead;
         SplitNode s = new SplitNode(pointer, otherNode);
         int splitID = s.getSplitNodeID();
         LinkedList<Integer> pointerIDs = s.getPointerIDs();
@@ -619,14 +625,18 @@ public class Gitlet implements Serializable {
             System.out.println("Already up-to-date.");
             return;
         }
-        while (!otherNodeIDs.isEmpty()) {
-            GitletNode movingNode = allCommits.get(otherNodeIDs.pollLast());
+        int thisCommitID = pointerIDs.removeLast();
+        while (splitID != thisCommitID) {
+            thisCommitID = pointerIDs.removeLast();
+        }
+        while (!pointerIDs.isEmpty()) {
+            GitletNode movingNode = allCommits.get(pointerIDs.pollLast());
             GitletNode newNode = new GitletNode(movingNode._files, movingNode._idMap, getTime(),
-                movingNode.getCommitMessage(), iD, branch, pointer);
-            pointer = newNode;
+                movingNode.getCommitMessage(), iD, branch, otherHead);
+            otherHead = newNode;
             iD++;
         }
-        branches.put(pointer.getBranchName(), pointer);
+        branches.put(otherHead.getBranchName(), otherHead);
     }
 
     /**
@@ -658,7 +668,12 @@ public class Gitlet implements Serializable {
             System.out.println("Already up-to-date.");
             return;
         }
-        Iterator<Integer> iter = otherNodeIDs.descendingIterator();
+        int thisCommitID = -1;
+        while (splitID != thisCommitID) {
+            System.out.println(pointerIDs);
+            thisCommitID = pointerIDs.removeLast();
+        }
+        Iterator<Integer> iter = pointerIDs.descendingIterator();
         while (iter.hasNext()) {
             int id = iter.next();
             System.out.println("Currently replaying: ");
@@ -669,8 +684,8 @@ public class Gitlet implements Serializable {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String answer;
             answer = br.readLine();
-            while ((answer.equals("s") && (id == otherNodeIDs.getFirst() 
-                || id == otherNodeIDs.getLast())) || (!answer.equals("c") 
+            while ((answer.equals("s") && (id == pointerIDs.getFirst() 
+                || id == pointerIDs.getLast())) || (!answer.equals("c") 
                 && !answer.equals("s") && !answer.equals("m")))  {
                 System.out.println("Please enter a valid command");
                 System.out.print("Would you like to (c)ontinue, (s)kip this "); 
@@ -680,20 +695,20 @@ public class Gitlet implements Serializable {
             }
             if (answer.equals("c")) {
                 GitletNode newNode = new GitletNode(movingNode._files, movingNode._idMap, getTime(),
-                    movingNode.getCommitMessage(), iD, branch, pointer);
-                pointer = newNode;
+                    movingNode.getCommitMessage(), iD, branch, otherHead);
+                otherHead = newNode;
                 iD++;
             } else if (answer.equals("m")) {
                 System.out.println("Please enter a new message for this commit.");
                 br = new BufferedReader(new InputStreamReader(System.in));
                 String message = br.readLine();
                 GitletNode newNode = new GitletNode(movingNode._files, movingNode._idMap, getTime(),
-                    message, iD, branch, pointer);
-                pointer = newNode;
+                    message, iD, branch, otherHead);
+                otherHead = newNode;
                 iD++;                
             }
         }
-        branches.put(pointer.getBranchName(), pointer);
+        branches.put(otherHead.getBranchName(), otherHead);
     }
 
     private void changePath() {
@@ -729,6 +744,12 @@ public class Gitlet implements Serializable {
             LinkedList<Integer> pointerIDs = new LinkedList<Integer>();
             LinkedList<Integer> otherNodeIDs = new LinkedList<Integer>();
             while (pointer != null && otherNode != null) {
+                if (otherNode.getID() == pointer.getID()) {
+                    splitNodeID = pointer.getID();
+                    pointerIDs.add(pointer.getID());
+                    otherNodeIDs.add(otherNode.getID());
+                    break;                
+                }
                 if (otherNodeIDs.contains(pointer.getID())) {
                     splitNodeID = pointer.getID();
                     break;
@@ -746,6 +767,7 @@ public class Gitlet implements Serializable {
                 while (otherNode != null) {
                     if (pointerIDs.contains(otherNode.getID())) {
                         splitNodeID = otherNode.getID();
+                        otherNodeIDs.add(otherNode.getID());
                         break;
                     }
                     otherNode = otherNode.next();
@@ -755,9 +777,11 @@ public class Gitlet implements Serializable {
                 while (pointer != null) {
                     if (otherNodeIDs.contains(pointer.getID())) {
                         splitNodeID = pointer.getID();
+                        pointerIDs.add(pointer.getID());
                         break;
                     }
                     pointer = pointer.next();
+                    pointerIDs.add(pointer.getID());
                 }
             }
             this.sid = splitNodeID;
@@ -776,46 +800,6 @@ public class Gitlet implements Serializable {
         public LinkedList<Integer> getOtherNodeIDs() {
             return oid;
         }
-    }
-
-    private int findSplitNode(String branch) {
-        GitletNode pointer = current;
-        GitletNode otherNode = branches.get(branch);
-        int splitID = -1;
-        ArrayList<Integer> pointerIDs = new ArrayList<Integer>();
-        ArrayList<Integer> otherNodeIDs = new ArrayList<Integer>();
-        while (pointer != null && otherNode != null) {
-            if (otherNodeIDs.contains(pointer.getID())) {
-                splitID = pointer.getID();
-                break;
-            } else if (pointerIDs.contains(otherNode.getID())) {
-                splitID = otherNode.getID();
-                break;
-            } else {
-                pointerIDs.add(pointer.getID());
-                otherNodeIDs.add(otherNode.getID());
-                pointer = pointer.next();
-                otherNode = otherNode.next();
-            }
-        }
-        if (pointer == null) {
-            while (otherNode != null) {
-                if (pointerIDs.contains(otherNode.getID())) {
-                    splitID = otherNode.getID();
-                    break;
-                }
-                otherNode = otherNode.next();
-            }
-        } else if (otherNode == null) {
-            while (pointer != null) {
-                if (otherNodeIDs.contains(pointer.getID())) {
-                    splitID = pointer.getID();
-                    break;
-                }
-                pointer = pointer.next();
-            }
-        }
-        return splitID;
     }
 }
 
