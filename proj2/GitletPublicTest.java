@@ -78,7 +78,6 @@ public class GitletPublicTest {
         File f = new File(GITLET_DIR);
         assertTrue(f.exists());
         String printedOutput = gitlet("init");
-        // assertTrue(printedOutput.contains("A gitlet version control system already exists in the current directory."));
         assertEquals("A gitlet version control system already exists in the current directory.\n", printedOutput);
     }
 
@@ -106,13 +105,13 @@ public class GitletPublicTest {
     @Test
     public void testCommit1() {
         String dog1FileName = TESTING_DIR + "dog1.txt";
-        String dog1Text = "Hi there!";
+        String dog1Text = "DOGGIE!";
         createFile(dog1FileName, dog1Text);
         gitlet("init");
         gitlet("add", dog1FileName);
-        gitlet("commit", "first commit");
+        gitlet("commit", "first");
         String logContent = gitlet("log");
-        assertArrayEquals(new String[] { "first commit", "initial commit" },
+        assertArrayEquals(new String[] { "first", "initial commit" },
                 extractCommitMessages(logContent));
     }
 
@@ -123,7 +122,7 @@ public class GitletPublicTest {
         createFile(dog1FileName, dog1Text);
         gitlet("init");
         gitlet("add", dog1FileName);
-        gitlet("commit", "first commit");
+        gitlet("commit", "first");
         String output = gitlet("commit", "second commit");
         assertEquals("No changes added to the commit.\n", output);
     }
@@ -158,15 +157,15 @@ public class GitletPublicTest {
 
     @Test
     public void testBasicCheckout2() {
-        String yingFileName = TESTING_DIR + "ying.txt";
-        String yingText = "Ying says hi.";
-        createFile(yingFileName, yingText);
+        String kevinFileName = TESTING_DIR + "kevin.txt";
+        String kevinText = "Kevin says WOW.";
+        createFile(kevinFileName, kevinText);
         gitlet("init");
-        gitlet("add", yingFileName);
-        gitlet("commit", "added Ying");
-        writeFile(yingFileName, "Ying says bye.");
-        gitlet("checkout", yingFileName);
-        assertEquals(yingText, getText(yingFileName));
+        gitlet("add", kevinFileName);
+        gitlet("commit", "added Kevin");
+        writeFile(kevinFileName, "Kevin says AW.");
+        gitlet("checkout", kevinFileName);
+        assertEquals(kevinText, getText(kevinFileName));
     }
 
     /**
@@ -347,15 +346,15 @@ public class GitletPublicTest {
     public void addFiveFilesAndVerifyStatus() {
         gitlet("init");
         for (int i = 0; i < 5; i++) {
-            String yingFileName = TESTING_DIR + "ying" + i + ".txt";
-            String yingText = "hi";
-            createFile(yingFileName, yingText);
-            gitlet("add", yingFileName);
+            String kevinFileName = TESTING_DIR + "kevin" + i + ".txt";
+            String kevinText = "hi";
+            createFile(kevinFileName, kevinText);
+            gitlet("add", kevinFileName);
         }
         String statusOutput = gitlet("status");
         System.out.println(statusOutput);
         for (int i = 0; i < 5; i++){
-            assertTrue(statusOutput.contains("ying" + i + ".txt"));
+            assertTrue(statusOutput.contains("kevin" + i + ".txt"));
         }
     }
 

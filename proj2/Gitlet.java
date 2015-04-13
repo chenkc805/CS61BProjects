@@ -80,6 +80,9 @@ public class Gitlet implements Serializable {
     /* The current directory */
     String currentDir;
 
+    /* Main method that determines the command that wants to be run with Gitlet. 
+     * It will either initialize a new .ser file or read an existing .ser file. 
+     */
     public static void main(String[] args) {
         try {
             if (!ReadWriteFiles.fileExists(".gitlet/savedState.ser")) {
@@ -190,12 +193,6 @@ public class Gitlet implements Serializable {
         }
         allCommits.put(current.getID(), current);
         ReadWriteFiles.writeSerFile(g, ".gitlet/savedState.ser");
-    }
-
-    private String getTime() {
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return format.format(date);
     }
 
     /**
@@ -321,6 +318,10 @@ public class Gitlet implements Serializable {
         }
     }
 
+    /** 
+     * Prints the log of one node 
+     * @param POINTER: The node to write the log for
+     */
     private void oneLog(GitletNode pointer) {
         System.out.println("====");
         System.out.println("Commit " + pointer._iD + ".");
@@ -710,15 +711,34 @@ public class Gitlet implements Serializable {
         }
         branches.put(otherHead.getBranchName(), otherHead);
     }
-
+    
+    /* Changes the file path to where files are saved, depending on what
+     * branch and commit ID the "commit" is being run.
+     */
     private void changePath() {
         path = ".gitlet/commits/" + branchName + "/" + iD + "/";
     }
 
+    /* Gets the current director where Gitlet is run. 
+     */
     private void getCurrentDirectory() {
         currentDir = System.getProperty("user.dir");
     }
 
+    /** 
+     * Gets the current time, formatted as "yyyy-MM-dd hh:mm:ss" for commits.
+     * @return: The time.
+     */
+    private String getTime() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return format.format(date);
+    }
+
+    /** 
+     * Throws a warning if any of the dangerous methods are being run.
+     * @return: True if answer is "yes".
+     */
     private boolean warning() throws IOException {
         System.out.print("Warning: The command you entered may alter the files in your "); 
         System.out.print("working directory. Uncommitted changes may be lost. Are you ");
@@ -728,17 +748,38 @@ public class Gitlet implements Serializable {
         return answer.equals("yes");
     }
 
+    /**
+     * Checks whether the command being run is a dangerous method.
+     * @param The method to run
+     * @return True if the method is dangerous.
+     */
     private boolean dangerousMethods(String input) {
         return input.equals("reset") || input.equals("merge") || input.equals("rebase")
                 || input.equals("i-rebase") || input.equals("checkout");
     }
 
+    /**
+     * A nested class that has a constructor giving LinkedLists of IDs 
+     * and the ID of the split point.
+     * For use for merge, rebase, and interactiveRebase. 
+     */
     private class SplitNode implements Serializable {
 
+        /* Split point ID */
         private int sid;
+
+        /* LinkedList of IDs of current branch */
         private LinkedList<Integer> pid;
+
+        /* LinkedList of IDs of given branch */
         private LinkedList<Integer> oid;
 
+        /**
+         * A constructor that gives the LinkedLists of IDs as we traverse
+         * down the current branch and given branch and the ID of the split point.
+         * @param POINTER: Head node of current branch
+         * @param otherNode: Head node of given branch
+         */
         public SplitNode(GitletNode pointer, GitletNode otherNode) {
             int splitNodeID = -1;
             LinkedList<Integer> pointerIDs = new LinkedList<Integer>();
@@ -789,14 +830,17 @@ public class Gitlet implements Serializable {
             this.oid = otherNodeIDs;
         }
 
+        /* Retrieves the split node ID. */
         public int getSplitNodeID() {
             return sid;
         }
 
+        /* Retrieves the LinkedList of IDs of the current branch. */
         public LinkedList<Integer> getPointerIDs() {
             return pid;
         }
 
+        /* Retrieves the LinkedList of IDs of the given branch. */
         public LinkedList<Integer> getOtherNodeIDs() {
             return oid;
         }
