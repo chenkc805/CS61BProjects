@@ -553,6 +553,9 @@ public class Gitlet implements Serializable {
     public void merge(String branch) {
         try {
             GitletNode otherHead = branches.get(branch);
+            System.out.println(branches);
+            System.out.println(otherHead);
+            System.out.println(current);
             if (otherHead == null) {
                 System.out.println("A branch with that name does not exist.");
                 return;
@@ -582,6 +585,7 @@ public class Gitlet implements Serializable {
                             File file = new File(".gitlet/commits/" + otherHead.getFullName()
                                 + "/" + fileName);
                             if (file.exists()) {
+                                System.out.println(4);
                                 Files.copy(file.toPath(), Paths.get(fileName + ".conflicted"));
                             }
                         }

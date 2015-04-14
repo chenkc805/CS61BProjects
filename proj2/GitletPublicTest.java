@@ -393,7 +393,7 @@ public class GitletPublicTest {
         createFile(test2FileName, test2Text);
         gitlet("init");
         gitlet("add", wugFileName);
-        System.out.println("FIRST COMMIT: " + gitlet("commit", "First")); 
+        gitlet("commit", "First"); 
         gitlet("branch", "branch1");
         gitlet("checkout", "branch1");
         gitlet("add", testFileName);
@@ -448,12 +448,35 @@ public class GitletPublicTest {
         gitlet("commit", "Seventh");
         gitlet("checkout", "branch1");
         
-        // System.out.println(gitlet("rebase", "master"));
-        // writeFile(wugFileName, "This is a wug??!");
-        // gitlet("checkout", wugFileName);
-        
         assertEquals("This is a wug!!!", getText(wugFileName));
     }
+
+    @Test
+    public void testConflicted() {
+        String tiggerFileName = TESTING_DIR + "tigger.txt";
+        String tiggerText = "Tigger has ADHD.";
+        createFile(tiggerFileName, tiggerText);
+        gitlet("init");
+        gitlet("add", tiggerFileName);
+        gitlet("commit", "master commit");
+        gitlet("branch", "b1");
+        gitlet("branch", "b2");
+        gitlet("checkout", "b1");
+        writeFile(tiggerFileName, "That one shouldn't be too hard to figure out.");
+        gitlet("add", tiggerFileName);
+        gitlet("commit", "b1 commit");
+        gitlet("checkout", "b2");
+        writeFile(tiggerFileName, "I wonder why the creators chose a tiger.");
+        gitlet("add", tiggerFileName);
+        gitlet("commit", "b2 commit");
+        gitlet("checkout", "b1");
+        gitlet("merge", "b2"); 
+        assertEquals("That one shouldn't be too hard to figure out.", getText(tiggerFileName));
+
+        String conflictedName = tiggerFileName + ".conflicted";
+        assertTrue(Files.exists(Paths.get(conflictedName)));
+    }
+
 
 
 
