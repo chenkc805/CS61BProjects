@@ -83,32 +83,32 @@ public class GitletPublicTest {
 
     @Test 
     public void testAdd1() {
-        String dog1FileName = TESTING_DIR + "dog1.txt";
-        String dog1Text = "This is a dog.";
-        createFile(dog1FileName, dog1Text);
+        String momFileName = TESTING_DIR + "mom.txt";
+        String momText = "This is a dog.";
+        createFile(momFileName, momText);
         gitlet("init");
-        gitlet("add", dog1FileName);
+        gitlet("add", momFileName);
         gitlet("commit", "first commit");
-        String printedOutput = gitlet("add", dog1FileName);
+        String printedOutput = gitlet("add", momFileName);
         assertEquals("File has not been modified since the last commit.\n", printedOutput);
     }
 
     @Test 
     public void testAdd2() {
-        String dog1FileName = TESTING_DIR + "dog1.txt";
+        String momFileName = TESTING_DIR + "mom.txt";
         gitlet("init");
-        gitlet("add", dog1FileName);
-        String printedOutput = gitlet("add", dog1FileName);
+        gitlet("add", momFileName);
+        String printedOutput = gitlet("add", momFileName);
         assertEquals("File does not exist.\n", printedOutput);
     }
 
     @Test
     public void testCommit1() {
-        String dog1FileName = TESTING_DIR + "dog1.txt";
-        String dog1Text = "DOGGIE!";
-        createFile(dog1FileName, dog1Text);
+        String momFileName = TESTING_DIR + "mom.txt";
+        String momText = "DOGGIE!";
+        createFile(momFileName, momText);
         gitlet("init");
-        gitlet("add", dog1FileName);
+        gitlet("add", momFileName);
         gitlet("commit", "first");
         String logContent = gitlet("log");
         assertArrayEquals(new String[] { "first", "initial commit" },
@@ -116,24 +116,24 @@ public class GitletPublicTest {
     }
 
     @Test
-    public void testCommit2() {
-        String dog1FileName = TESTING_DIR + "dog.txt";
-        String dog1Text = "Hi there!";
-        createFile(dog1FileName, dog1Text);
+    public void testCommitNoChanges() {
+        String momFileName = TESTING_DIR + "mom.txt";
+        String momText = "Hi there!";
+        createFile(momFileName, momText);
         gitlet("init");
-        gitlet("add", dog1FileName);
+        gitlet("add", momFileName);
         gitlet("commit", "first");
         String output = gitlet("commit", "second commit");
         assertEquals("No changes added to the commit.\n", output);
     }
 
     @Test
-    public void testCommit3() {
-        String dog1FileName = TESTING_DIR + "dog1.txt";
-        String dog1Text = "Hi there!";
-        createFile(dog1FileName, dog1Text);
+    public void testCommitPleaseEnter() {
+        String momFileName = TESTING_DIR + "mom.txt";
+        String momText = "Hi there!";
+        createFile(momFileName, momText);
         gitlet("init");
-        gitlet("add", dog1FileName);
+        gitlet("add", momFileName);
         String output = gitlet("commit");
         assertEquals("Please enter a commit message.\n", output);
     }
@@ -371,12 +371,12 @@ public class GitletPublicTest {
     @Test 
     public void testRemove2() {
         String omgFileName = TESTING_DIR + "omg.txt";
-        String omgText = "like no way";
+        String omgText = "AIII way";
         createFile(omgFileName, omgText);
         gitlet("init");
         gitlet("add", omgFileName);
         gitlet("rm", omgFileName);
-        String output = gitlet("commit", "gurrrrrrl");
+        String output = gitlet("commit", "weee");
         assertEquals("No changes added to the commit.\n", output);
     }
 
@@ -453,27 +453,27 @@ public class GitletPublicTest {
 
     @Test
     public void testConflicted() {
-        String tiggerFileName = TESTING_DIR + "tigger.txt";
-        String tiggerText = "Tigger has ADHD.";
-        createFile(tiggerFileName, tiggerText);
+        String wowFileName = TESTING_DIR + "wow.txt";
+        String wowText = "woow.";
+        createFile(wowFileName, wowText);
         gitlet("init");
-        gitlet("add", tiggerFileName);
+        gitlet("add", wowFileName);
         gitlet("commit", "master commit");
         gitlet("branch", "b1");
         gitlet("branch", "b2");
         gitlet("checkout", "b1");
-        writeFile(tiggerFileName, "That one shouldn't be too hard to figure out.");
-        gitlet("add", tiggerFileName);
+        writeFile(wowFileName, "sucladuc.");
+        gitlet("add", wowFileName);
         gitlet("commit", "b1 commit");
         gitlet("checkout", "b2");
-        writeFile(tiggerFileName, "I wonder why the creators chose a tiger.");
-        gitlet("add", tiggerFileName);
+        writeFile(wowFileName, "ao0o0o0ow.");
+        gitlet("add", wowFileName);
         gitlet("commit", "b2 commit");
         gitlet("checkout", "b1");
         gitlet("merge", "b2"); 
-        assertEquals("That one shouldn't be too hard to figure out.", getText(tiggerFileName));
+        assertEquals("sucladuc.", getText(wowFileName));
 
-        String conflictedName = tiggerFileName + ".conflicted";
+        String conflictedName = wowFileName + ".conflicted";
         assertTrue(Files.exists(Paths.get(conflictedName)));
     }
 
