@@ -182,15 +182,17 @@ public final class Sort {
             tmpArray[tmpPos++] = a[rightPos++];
         }
 
+
+
         // Copy TmpArray back
         for (int i = 0; i < numElements; i++, rightEnd--) {
             SortSounds.clearRectangle(rightEnd);
             a[rightEnd] = tmpArray[rightEnd];
             SortSounds.drawRectangle(StdDraw.RED, rightEnd);
-            StdDraw.show(5);
+            StdDraw.show(1);
             SortSounds.play(rightEnd);
             SortSounds.drawRectangle(StdDraw.CYAN, rightEnd);
-            StdDraw.show(5);
+            StdDraw.show(1);
         }
     }
 
@@ -254,11 +256,21 @@ public final class Sort {
     private static void exch(int[] a, int index1, int index2) {
         /** YOUR CODE HERE! */
 
+        SortSounds.clearRectangle(index1);
+        SortSounds.clearRectangle(index2);
+
         int tmp = a[index1];
         a[index1] = a[index2];
         a[index2] = tmp;
 
+        SortSounds.drawRectangle(StdDraw.RED, index2);
+        StdDraw.show(100);
+
         /** YOUR CODE HERE! */
+        SortSounds.drawRectangle(StdDraw.CYAN, index1);
+        SortSounds.drawRectangle(StdDraw.CYAN, index2);
+        SortSounds.play(index1);
+        StdDraw.show(100);
 
     }
 
