@@ -77,7 +77,7 @@ public class UserList {
         }
         if (sortFeature.equals("id")) {
             User person = qUnsorted.nth(pivot);
-            while (qUnsorted.front() != null) {
+            while (qUnsorted.size() != 0) {
                 User iterate = qUnsorted.dequeue();
                 int compare = person.compareById(iterate);
                 if (compare > 0) {
@@ -90,7 +90,7 @@ public class UserList {
             }
         } else if (sortFeature.equals("pages")) {
             User person = qUnsorted.nth(pivot);
-            while (qUnsorted.front() != null) {
+            while (qUnsorted.size() != 0) {
                 User iterate = qUnsorted.dequeue();
                 int compare = person.compareByPagesPrinted(iterate);
                 if (compare > 0) {
@@ -183,7 +183,7 @@ public class UserList {
         }
         CatenableQueue<User> result = new CatenableQueue<User>();
         if (sortFeature.equals("id")) {
-            while (q1.front() != null) {
+            while (q1.size() != 0) {
                 User u1 = q1.front();
                 User u2 = q2.front();
                 if (u2 == null) {
@@ -199,7 +199,7 @@ public class UserList {
             }
             result.append(q2);
         } else if (sortFeature.equals("pages")) {
-            while (q1.front() != null) {
+            while (q1.size() != 0) {
                 User u1 = q1.front();
                 User u2 = q2.front();
                 if (u2 == null) {
@@ -232,7 +232,7 @@ public class UserList {
     **/
     public void mergeSort(String sortFeature) {
         CatenableQueue<CatenableQueue<User>> result = makeQueueOfQueues();
-        while (result.size() != 1 && result.front() != null) { 
+        while (result.size() > 1) { 
             CatenableQueue<CatenableQueue<User>> holder = new CatenableQueue<CatenableQueue<User>>();
             while (result.front() != null) {
                 holder.enqueue(mergeTwoQueues(sortFeature, result.dequeue(), result.dequeue()));
