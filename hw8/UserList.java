@@ -72,7 +72,7 @@ public class UserList {
     **/ 
     public static void partition(String sortFeature, CatenableQueue<User> qUnsorted, int pivot, 
         CatenableQueue<User> qLess, CatenableQueue<User> qEqual, CatenableQueue<User> qGreater){
-        if (qUnsorted == null) {
+        if (qUnsorted.front() == null) {
             return;
         }
         if (sortFeature.equals("id")) {
@@ -121,18 +121,19 @@ public class UserList {
         if (q.front() == null) {
             return;
         }
-        Random r = new Random();
-        int randomPivot = r.nextInt(q.size());
-        CatenableQueue<User> less = new CatenableQueue<User>();
-        CatenableQueue<User> equal = new CatenableQueue<User>();
-        CatenableQueue<User> more = new CatenableQueue<User>();
-        partition(sortFeature, q, randomPivot, less, equal, more);
-        quickSort(sortFeature, less);
-        quickSort(sortFeature, more);
-        q.append(less);
-        q.append(equal);
-        q.append(more);
-        //Replace with solution.
+        if (sortFeature.equals("id") || sortFeature.equals("pages")) {
+            Random r = new Random();
+            int randomPivot = r.nextInt(q.size());
+            CatenableQueue<User> less = new CatenableQueue<User>();
+            CatenableQueue<User> equal = new CatenableQueue<User>();
+            CatenableQueue<User> more = new CatenableQueue<User>();
+            partition(sortFeature, q, randomPivot, less, equal, more);
+            quickSort(sortFeature, less);
+            quickSort(sortFeature, more);
+            q.append(less);
+            q.append(equal);
+            q.append(more);
+        }
     }
 
     /**
@@ -197,8 +198,7 @@ public class UserList {
                 }
             }
             result.append(q2);
-        }
-        if (sortFeature.equals("pages")) {
+        } else if (sortFeature.equals("pages")) {
             while (q1.front() != null) {
                 User u1 = q1.front();
                 User u2 = q2.front();
@@ -216,6 +216,9 @@ public class UserList {
                 }
             }
             result.append(q2);
+        } else {
+            System.out.println("Not a valid sorting option.");
+            return;
         }
         return result;
     }
@@ -228,11 +231,8 @@ public class UserList {
     *       printed, sortFeatures equals "pages".
     **/
     public void mergeSort(String sortFeature) {
-        if (userQueue == null) {
-            return;
-        }
         CatenableQueue<CatenableQueue<User>> result = makeQueueOfQueues();
-        while (result.size() != 1) { 
+        while (result.size() != 1 && result.front() != null) { 
             CatenableQueue<CatenableQueue<User>> holder = new CatenableQueue<CatenableQueue<User>>();
             while (result.front() != null) {
                 holder.enqueue(mergeTwoQueues(sortFeature, result.dequeue(), result.dequeue()));

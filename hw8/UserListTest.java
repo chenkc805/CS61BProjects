@@ -40,7 +40,6 @@ public class UserListTest {
         list.add(new User(12, 12));
         list.add(new User(12, 5));
         list.add(new User(19, 14));
-        list.add(new User(2, 7));
         System.out.println(list);
         list.mergeSort("id");
         System.out.println(list);
