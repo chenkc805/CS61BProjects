@@ -218,7 +218,7 @@ public class UserList {
             result.append(q2);
         } else {
             System.out.println("Not a valid sorting option.");
-            return;
+            return null;
         }
         return result;
     }
