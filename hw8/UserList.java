@@ -76,10 +76,9 @@ public class UserList {
             return;
         }
         if (sortFeature.equals("id")) {
-            User person = qUnsorted.nth(pivot);
             while (qUnsorted.size() != 0) {
                 User iterate = qUnsorted.dequeue();
-                int compare = person.compareById(iterate);
+                int compare = pivot - iterate.getId();
                 if (compare > 0) {
                     qLess.enqueue(iterate);
                 } else if (compare < 0) {
@@ -89,10 +88,9 @@ public class UserList {
                 }
             }
         } else if (sortFeature.equals("pages")) {
-            User person = qUnsorted.nth(pivot);
             while (qUnsorted.size() != 0) {
                 User iterate = qUnsorted.dequeue();
-                int compare = person.compareByPagesPrinted(iterate);
+                int compare = pivot - iterate.getPagesPrinted();
                 if (compare > 0) {
                     qLess.enqueue(iterate);
                 } else if (compare < 0) {
@@ -124,10 +122,16 @@ public class UserList {
         if (sortFeature.equals("id") || sortFeature.equals("pages")) {
             Random r = new Random();
             int randomPivot = r.nextInt(q.size());
+            int pivot;
+            if (sortFeature.equals("id")) {
+                pivot = q.nth(randomPivot).getId();
+            } else {
+                pivot = q.nth(randomPivot).getPagesPrinted();
+            }
             CatenableQueue<User> less = new CatenableQueue<User>();
             CatenableQueue<User> equal = new CatenableQueue<User>();
             CatenableQueue<User> more = new CatenableQueue<User>();
-            partition(sortFeature, q, randomPivot, less, equal, more);
+            partition(sortFeature, q, pivot, less, equal, more);
             quickSort(sortFeature, less);
             quickSort(sortFeature, more);
             q.append(less);
@@ -373,7 +377,7 @@ public class UserList {
         // your code is bug-free!
 
         // Uncomment the following line when ready
-        // jh61b.junit.textui.runClasses(UserList.class);
+        jh61b.junit.textui.runClasses(UserList.class);
     }
 
 }
