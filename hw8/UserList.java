@@ -154,7 +154,7 @@ public class UserList {
     **/
     public CatenableQueue<CatenableQueue<User>> makeQueueOfQueues(){
         CatenableQueue<CatenableQueue<User>> c = new CatenableQueue<CatenableQueue<User>>();
-        while (userQueue.front() != null) {
+        while (userQueue != null && userQueue.front() != null) {
             CatenableQueue<User> insert = new CatenableQueue<User>();
             insert.enqueue(userQueue.dequeue());
             c.enqueue(insert);
