@@ -159,6 +159,10 @@ public class UserList {
             insert.enqueue(userQueue.dequeue());
             c.enqueue(insert);
         }
+        if (c.isEmpty()) {
+            CatenableQueue<User> emptyInsert = new CatenableQueue<User>();
+            c.enqueue(emptyInsert);
+        }
         return c;
     }
 

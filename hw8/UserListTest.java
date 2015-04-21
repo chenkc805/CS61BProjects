@@ -66,6 +66,14 @@ public class UserListTest {
         System.out.println("");
     }
 
+    @Test
+    public void testMakeQofQ() {
+        UserList list = new UserList();
+        System.out.println(list.makeQueueOfQueues());
+        System.out.println("===================");
+        System.out.println("");
+    }
+
     public static void main(String[] args) {
         jh61b.junit.textui.runClasses(UserListTest.class);
     }                 
