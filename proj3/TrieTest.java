@@ -53,7 +53,21 @@ public class TrieTest {
         t.insert("breakfast");
         assertFalse(t.find("", false));
         assertFalse(t.find(null, false));
+    }
 
+    @Test
+    public void testMultipleWords() {
+        Trie t = new Trie();
+        t.insert("two words");
+        assertFalse(t.find("two", true));
+        assertTrue(t.find("two", false));
+        assertTrue(t.find("two ", false));
+        assertFalse(t.find("words", true));
+        assertTrue(t.find("two words", true));
+        t.insert("two ");
+        assertTrue(t.find("two", false));
+        assertTrue(t.find("two ", true));
+        assertTrue(t.find("two words", true));
     }
 
     @Test

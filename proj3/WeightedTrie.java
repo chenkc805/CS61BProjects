@@ -6,7 +6,7 @@
  */
 public class WeightedTrie {
 
-    final int R = 128;
+    final int R = 255;
     Node root = new Node();
     private int size;
 

@@ -1,5 +1,5 @@
 public class Node {
-    private final int R = 128;
+    private final int R = 255;
     String character;
     boolean exists;
     Node[] links;

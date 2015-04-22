@@ -6,7 +6,7 @@
  */
 public class Trie {
 
-    private static final int R = 128;
+    private static final int R = 255;
     private Node root = new Node();
 
     /**
