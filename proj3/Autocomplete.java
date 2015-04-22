@@ -11,6 +11,7 @@ public class Autocomplete {
     private WeightedTrie trie;
     private PriorityQueue<Node> pq;
     private PriorityQueue<String> _topMatches;
+    private static final NodeMaxWeightComparator COMPARATOR = new NodeMaxWeightComparator();
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
@@ -29,7 +30,7 @@ public class Autocomplete {
             }
             trie.insert(terms[i], weights[i]);
         }
-        pq = new PriorityQueue<Node>(11, new NodeMaxWeightComparator());
+        pq = new PriorityQueue<Node>(11, COMPARATOR);
     }
 
     /**
