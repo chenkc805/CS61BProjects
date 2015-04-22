@@ -1,21 +1,48 @@
+import java.util.PriorityQueue;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Arrays;
+
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  */
 public class Autocomplete {
+
+    private WeightedTrie trie;
+    private PriorityQueue<Node> pq;
+    private PriorityQueue<String> _topMatches;
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
+        HashSet<String> checkDuplicates = new HashSet<String>(Arrays.asList(terms));
+        if (terms.length != weights.length || checkDuplicates.size() != terms.length) {
+            throw new IllegalArgumentException();
+        }
+        trie = new WeightedTrie();
+        for (int i = 0; i < terms.length; i++) {
+            if (weights[i] < 0) {
+                trie.clear();
+                throw new IllegalArgumentException();
+            }
+            trie.insert(terms[i], weights[i]);
+        }
+        pq = new PriorityQueue<Node>(11, new NodeMaxWeightComparator());
     }
 
     /**
      * Find the weight of a given term. If it is not in the dictionary, return 0.0
      * @param term
-     * @return
+     * @return weight of the given term.
      */
     public double weightOf(String term) {
+        if (trie.find(term, true) && trie.get(term, true) != null) {
+            return trie.get(term, true).existsWeight;
+        } else {
+            return 0.0;
+        }
     }
 
     /**
@@ -24,6 +51,31 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        return topMatch(trie.root, prefix, -1);
+    }
+
+    private String topMatch(Node n, String prefix, double max) {
+        if (n.existsWeight == max) {
+            return prefix;
+        }
+        if (trie.find(prefix, false) && trie.get(prefix, false) != null) {
+            Node curr = trie.get(prefix, false);
+            double weight = curr.maxWeight;
+            double topMatchDouble = 0.0;
+            Node topNode = null;
+            Node[] nodes = curr.links;
+            for (int i = 0; i < trie.R; i++) {
+                if (nodes[i] != null) {
+                    if (nodes[i].maxWeight == weight) {
+                        topNode = nodes[i];
+                        break;
+                    }  
+                }
+            }
+            return topMatch(topNode, prefix + topNode.character, max);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -34,6 +86,38 @@ public class Autocomplete {
      * @return
      */
     public Iterable<String> topMatches(String prefix, int k) {
+        if (k < 0) {
+            throw new IllegalArgumentException();
+        }
+        Node curr = trie.get(prefix, false);
+        topMatches(curr, prefix, k, curr.maxWeight);
+        PriorityQueue<String> result = new PriorityQueue<String>(_topMatches);
+        _topMatches.clear();
+        return result;
+
+    }
+
+    private void topMatches(Node x, String prefix, int k, double weight) {
+        if (x == null) {
+            return;
+        }
+        if (x.exists) {
+            _topMatches.add(prefix);
+            k--;
+        }
+        if (k == 0) {
+            return;
+        }
+        Node[] nodes = x.links;
+        for (int i = 0; i < nodes.length; i++) {
+            pq.add(nodes[i]);
+        }
+        Node first = pq.poll();
+        Node second = pq.poll();
+        Node third = pq.poll();
+        topMatches(first, prefix + first.character, k, weight);
+        topMatches(second, prefix + second.character, k, weight);
+        topMatches(third, prefix + third.character, k, weight);
     }
 
     /**
