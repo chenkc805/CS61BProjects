@@ -34,8 +34,8 @@ public class Trie {
      * @return bool depending on if the word is found and if that word matches s and isFullWord
      */ 
     public boolean find(String s, boolean isFullWord) {
-        if (s.equals("") || s == null) {
-            throw new IllegalArgumentException();
+        if (s == null || s.equals("")) {
+            return false;
         }
         return find(root, s, isFullWord, 0);
     }
@@ -64,7 +64,7 @@ public class Trie {
      * @param s is the string we are inserting
      */ 
     public void insert(String s) {
-        if (s.equals("") || s == null) {
+        if (s == null || s.equals("")) {
             throw new IllegalArgumentException();
         }
         insert(root, s, 0);
