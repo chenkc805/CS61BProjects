@@ -11,6 +11,7 @@ public class Autocomplete {
     private WeightedTrie trie;
     private PriorityQueue<Node> pq;
     private PriorityQueue<String> _topMatches;
+    private static final int SIZE_OF_PQ = 11;
     private static final NodeMaxWeightComparator COMPARATOR = new NodeMaxWeightComparator();
     /**
      * Initializes required data structures from parallel arrays.
@@ -30,12 +31,12 @@ public class Autocomplete {
             }
             trie.insert(terms[i], weights[i]);
         }
-        pq = new PriorityQueue<Node>(11, COMPARATOR);
+        pq = new PriorityQueue<Node>(SIZE_OF_PQ, COMPARATOR);
     }
 
     /**
      * Find the weight of a given term. If it is not in the dictionary, return 0.0
-     * @param term
+     * @param term The word to look for
      * @return weight of the given term.
      */
     public double weightOf(String term) {
@@ -55,6 +56,12 @@ public class Autocomplete {
         return topMatch(trie.root, prefix, -1);
     }
 
+    /**
+     * Helper method for finding the topMatch
+     * @param n the Node we are currently on
+     * @param prefix is the prefix we are searching through
+     * @param weight the maxWeight of the prefix
+     */
     private String topMatch(Node n, String prefix, double max) {
         if (n.existsWeight == max) {
             return prefix;
@@ -82,9 +89,9 @@ public class Autocomplete {
     /**
      * Returns the top k matching terms (in descending order of weight) as an iterable.
      * If there are less than k matches, return all the matching terms.
-     * @param prefix
-     * @param k
-     * @return
+     * @param prefix The top k terms of this prefix
+     * @param k The number of terms to return in the iterable
+     * @return Iterable of the top k terms with prefix.
      */
     public Iterable<String> topMatches(String prefix, int k) {
         if (k < 0) {
@@ -98,6 +105,13 @@ public class Autocomplete {
 
     }
 
+    /**
+     * Helper method for finding the topMatches
+     * @param x the Node we are currently on
+     * @param prefix is the prefix we are searching through
+     * @param k Number of results to return 
+     * @param weight the maxWeight of the prefix
+     */
     private void topMatches(Node x, String prefix, int k, double weight) {
         if (x == null) {
             return;
@@ -136,7 +150,8 @@ public class Autocomplete {
     }
     /**
      * Test client. Reads the data from the file, 
-     * then repeatedly reads autocomplete queries from standard input and prints out the top k matching terms.
+     * then repeatedly reads autocomplete queries from standard input and 
+     * prints out the top k matching terms.
      * @param args takes the name of an input file and an integer k as command-line arguments
      */
     public static void main(String[] args) {
@@ -157,8 +172,13 @@ public class Autocomplete {
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
             String prefix = StdIn.readLine();
-            for (String term : autocomplete.topMatches(prefix, k))
+            for (String term : autocomplete.topMatches(prefix, k)) {
                 StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);
+            }
         }
     }
 }
+
+
+
+

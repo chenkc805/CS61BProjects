@@ -70,9 +70,9 @@ public class WeightedTrie {
     }
 
     private Node insert(Node x, String s, int d, double weight) {
-        char c = s.charAt(d);
-        if (x == null) {
-            x = new Node(String.valueOf(c), weight);
+        if (x == null && d != s.length()) {
+            String c = String.valueOf(s.charAt(d));
+            x = new Node(c, weight);
         }
         if (d == s.length()) {
             x.exists = true;
@@ -82,6 +82,7 @@ public class WeightedTrie {
             if (x.maxWeight < weight) {
                 x.maxWeight = weight;
             }
+            char c = s.charAt(d);
             x.links[c] = insert(x.links[c], s, d+1, weight);
         }
         return x;
