@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.HashSet;
 
-/* Sorts a list of words with a given alphabet */
+/**
+ * Sorts a list of words with a given alphabet 
+ * @author Kevin Chen
+ */
 public class AlphabetSort {
 
     private static final int R = 256;
@@ -35,7 +38,7 @@ public class AlphabetSort {
     public static void sortMSD(String[] a) {
         int N = a.length;
         temp = new String[N];
-        sortMSD(a, 0, N-1, 0);
+        sortMSD(a, 0, N - 1, 0);
     }
 
     /**
@@ -53,7 +56,7 @@ public class AlphabetSort {
         for (int i = low; i <= high; i++) {
             count[charAt(a[i], d) + 2]++;
         }
-        for (int i = 0; i < R+1; i++) {     
+        for (int i = 0; i < R + 1; i++) {     
             count[i + 1] += count[i];
         }
         for (int i = low; i <= high; i++) {   
@@ -64,7 +67,7 @@ public class AlphabetSort {
             a[i] = temp[i - low];
         }
         for (int i = 0; i < R; i++) {
-            sortMSD(a, low + count[i], low + count[i+1] - 1, d + 1);
+            sortMSD(a, low + count[i], low + count[i + 1] - 1, d + 1);
         }
     }
 

@@ -9,12 +9,15 @@ public class Trie {
     private static final int R = 128;
     private Node root = new Node();
 
-    /* A private class for each node in the Trie */
+    /**
+     * A private class for each node in the Trie 
+     */
     private class Node {
         boolean exists;
         Node[] links;
 
-        /* Constructor for the Node class 
+        /**
+         * Constructor for the Node class 
          * Initilizes an empty Node array and sets the 
          * exists bool to false. 
          */

@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
+ * @author Kevin Chen
  */
 public class Autocomplete {
 
@@ -60,7 +61,8 @@ public class Autocomplete {
      * Helper method for finding the topMatch
      * @param n the Node we are currently on
      * @param prefix is the prefix we are searching through
-     * @param weight the maxWeight of the prefix
+     * @param max the maxWeight of the prefix
+     * @return the top match string
      */
     private String topMatch(Node n, String prefix, double max) {
         if (n.existsWeight == max) {
