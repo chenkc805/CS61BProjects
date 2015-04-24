@@ -67,8 +67,10 @@ public class AlphabetSort {
                 count[charAt(a[i], d) + 1]++;
             }
         }
-        for (int i = low; i <= high; i++) {  
-            a[i] = temp[i - low];
+        for (int i = low; i <= high; i++) { 
+            if (charAt(a[i], d) != -1) { 
+                a[i] = temp[i - low];
+            }
         }
         for (int i = 0; i < R; i++) {
             sortMSD(a, low + count[i], low + count[i + 1] - 1, d + 1);
