@@ -54,14 +54,18 @@ public class AlphabetSort {
         } 
         int[] count = new int[R + 2];       
         for (int i = low; i <= high; i++) {
-            count[charAt(a[i], d) + 2]++;
+            if (charAt(a[i] ,d) != -1) {
+                count[charAt(a[i], d) + 2]++;
+            } 
         }
         for (int i = 0; i < R + 1; i++) {     
             count[i + 1] += count[i];
         }
         for (int i = low; i <= high; i++) {   
-            temp[count[charAt(a[i], d) + 1]] = a[i];
-            count[charAt(a[i], d) + 1]++;
+            if (charAt(a[i], d) != -1) {
+                temp[count[charAt(a[i], d) + 1]] = a[i];
+                count[charAt(a[i], d) + 1]++;
+            }
         }
         for (int i = low; i <= high; i++) {  
             a[i] = temp[i - low];
@@ -69,6 +73,15 @@ public class AlphabetSort {
         for (int i = 0; i < R; i++) {
             sortMSD(a, low + count[i], low + count[i + 1] - 1, d + 1);
         }
+        ArrayList<String> n = new ArrayList<String>();
+        for (int i = 0; i < R; i++) {
+            if (a[i] == null) {
+                break;
+            }
+            n.add(a[i]);
+        }
+        String[] newArray = new String[n.size()];
+        toSort = n.toArray(newArray);
     }
 
     /**

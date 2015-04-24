@@ -71,6 +71,49 @@ public class TrieTest {
     }
 
     @Test
+    public void testCaseSensitive() {
+        Trie t = new Trie();
+        t.insert("two words");
+        assertFalse(t.find("two", true));
+        assertTrue(t.find("two", false));
+        assertTrue(t.find("two ", false));
+        assertFalse(t.find("words", true));
+        assertTrue(t.find("two words", true));
+        t.insert("two ");
+        assertTrue(t.find("two", false));
+        assertTrue(t.find("two ", true));
+        assertTrue(t.find("two words", true));
+        t.insert("TWO");
+        assertTrue(t.find("TWO", true));
+        assertFalse(t.find("TWO", false));
+        assertFalse(t.find("two", true));
+        assertFalse(t.find("twO", true));
+    }
+
+    @Test
+    public void testPunctuation() {
+        Trie t = new Trie();
+        t.insert("two words");
+        assertFalse(t.find("two", true));
+        assertTrue(t.find("two", false));
+        assertTrue(t.find("two ", false));
+        assertFalse(t.find("words", true));
+        assertTrue(t.find("two words", true));
+        t.insert("two ");
+        assertTrue(t.find("two", false));
+        assertTrue(t.find("two ", true));
+        assertTrue(t.find("two words", true));
+        t.insert("TWO");
+        assertTrue(t.find("TWO", true));
+        assertFalse(t.find("TWO", false));
+        assertFalse(t.find("two", true));
+        assertFalse(t.find("twO", true));
+        t.insert("TWO!!");
+        assertTrue(t.find("TWO", true));
+        assertTrue(t.find("TWO!!", true));
+    }
+
+    @Test
     public void testEmptyString() {
         Trie t = new Trie();
         // t.insert(null);
