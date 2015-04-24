@@ -54,7 +54,7 @@ public class AlphabetSort {
         } 
         int[] count = new int[R + 2];       
         for (int i = low; i <= high; i++) {
-            if (charAt(a[i] ,d) != -1) {
+            if (charAt(a[i], d) != -1) {
                 count[charAt(a[i], d) + 2]++;
             } 
         }
@@ -74,7 +74,7 @@ public class AlphabetSort {
             sortMSD(a, low + count[i], low + count[i + 1] - 1, d + 1);
         }
         ArrayList<String> n = new ArrayList<String>();
-        for (int i = 0; i < R; i++) {
+        for (int i = low; i <= high; i++) {
             if (a[i] == null) {
                 break;
             }
