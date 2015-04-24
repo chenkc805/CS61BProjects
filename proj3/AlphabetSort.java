@@ -16,6 +16,7 @@ public class AlphabetSort {
     private static String[] toSort;
     private static String[] temp; 
     private static List<Character> alphabet;
+    private static int maxLength;
 
     /**
      *  Determines the order of where a certain character should fall given a certain alphabet. 
@@ -23,7 +24,7 @@ public class AlphabetSort {
      *  @param d the index of the character being analyzed
      *  @return the rank of the d. The lower the number, earlier in the sort the character falls.
      */
-    private static int charAt(String s, int d) {  
+    private static int charAt(String s, int d) {
         if (d < s.length()) {
             return alphabet.indexOf(s.charAt(d));
         } else {
@@ -54,36 +55,47 @@ public class AlphabetSort {
         } 
         int[] count = new int[R + 2];       
         for (int i = low; i <= high; i++) {
-            if (charAt(a[i], d) != -1) {
-                count[charAt(a[i], d) + 2]++;
-            } 
+            count[charAt(a[i], d) + 2]++;
         }
         for (int i = 0; i < R + 1; i++) {     
             count[i + 1] += count[i];
         }
         for (int i = low; i <= high; i++) {   
-            if (charAt(a[i], d) != -1) {
-                temp[count[charAt(a[i], d) + 1]] = a[i];
-                count[charAt(a[i], d) + 1]++;
-            }
+            temp[count[charAt(a[i], d) + 1]] = a[i];
+            count[charAt(a[i], d) + 1]++;
         }
         for (int i = low; i <= high; i++) { 
-            if (charAt(a[i], d) != -1) { 
-                a[i] = temp[i - low];
-            }
+            a[i] = temp[i - low];
         }
         for (int i = 0; i < R; i++) {
             sortMSD(a, low + count[i], low + count[i + 1] - 1, d + 1);
         }
+    }
+
+    private static void remove(String[] a, int d) {
+        if (d > maxLength) {
+            return;
+        }
         ArrayList<String> n = new ArrayList<String>();
-        for (int i = low; i <= high; i++) {
-            if (a[i] == null) {
-                break;
-            }
-            n.add(a[i]);
+        for (int i = 0; i < a.length; i++) {
+            if (charAt(a[i], d) != -1 || d >= a[i].length()) {
+                n.add(a[i]);
+            } 
         }
         String[] newArray = new String[n.size()];
         toSort = n.toArray(newArray);
+        remove(toSort, d+1);
+    }
+
+    private static void getLengthLongestString(String[] a)
+    {
+        maxLength = 0;
+        String longestString = null;
+        for (String s : a) {
+            if (s.length() > maxLength) {
+                maxLength = s.length();
+            }
+        }
     }
 
     /**
@@ -101,7 +113,7 @@ public class AlphabetSort {
             }
             HashSet<Character> alphabetSet = new HashSet<Character>(alphabet);
             input = in.readLine();
-            if (input == null || alphabetSet.size() < alphabet.size()) {
+            if (input.equals("") || alphabetSet.size() < alphabet.size()) {
                 throw new IllegalArgumentException();
             }
             ArrayList<String> toSortArrayList = new ArrayList<String>();
@@ -112,9 +124,11 @@ public class AlphabetSort {
             Object[] toSortObject = toSortArrayList.toArray();
             toSort = Arrays.copyOf(toSortObject, toSortObject.length, String[].class);
 
-            System.out.println(Arrays.toString(toSort));
+            //System.out.println(Arrays.toString(toSort));
+            getLengthLongestString(toSort);
+            remove(toSort, 0);
             sortMSD(toSort);
-            System.out.println(Arrays.toString(toSort));
+            //System.out.println(Arrays.toString(toSort));
 
         } catch (IOException io) {
             io.printStackTrace();
