@@ -19,7 +19,7 @@ public class Node {
         this.character = c;
         this.links = new Node[R];
         this.fullWord = false;
-        this.partialWord = true;
+        this.partialWord = false;
         this.maxWeight = maxWeight;
         this.existsWeight = existsWeight;
     }

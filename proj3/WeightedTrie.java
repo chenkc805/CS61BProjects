@@ -27,7 +27,11 @@ public class WeightedTrie {
             return false;
         }
         if (d == s.length()) {
-            return x.exists == isFullWord;
+            if (isFullWord) {
+                return x.fullWord == isFullWord;
+            } else {
+                return x.partialWord != isFullWord;
+            }
         }
         char c = s.charAt(d);
         return find(x.links[c], s, isFullWord, d+1);
@@ -51,7 +55,7 @@ public class WeightedTrie {
             return null;
         }
         if (d == s.length()) {
-            if (x.exists == isFullWord) {
+            if (x.fullWord == isFullWord || x.partialWord != isFullWord) {
                 return x;
             } else {
                 return null;
@@ -75,7 +79,7 @@ public class WeightedTrie {
             x = new Node(c, weight);
         }
         if (d == s.length()) {
-            x.exists = true;
+            x.fullWord = true;
             x.maxWeight = weight;
             x.existsWeight = weight;
         } else {
@@ -84,6 +88,7 @@ public class WeightedTrie {
             }
             char c = s.charAt(d);
             x.links[c] = insert(x.links[c], s, d+1, weight);
+            x.partialWord = true;
         }
         return x;
     }

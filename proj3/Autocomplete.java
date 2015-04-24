@@ -118,7 +118,7 @@ public class Autocomplete {
         if (x == null) {
             return;
         }
-        if (x.exists) {
+        if (x.fullWord) {
             _topMatches.add(prefix);
             k--;
         }
