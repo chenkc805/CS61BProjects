@@ -1,7 +1,8 @@
 public class Node {
     private final int R = 255;
     String character;
-    boolean exists;
+    boolean fullWord;
+    boolean partialWord;
     Node[] links;
     double maxWeight;
     double existsWeight;
@@ -17,7 +18,8 @@ public class Node {
     public Node(String c, double maxWeight, double existsWeight) {
         this.character = c;
         this.links = new Node[R];
-        this.exists = false;
+        this.fullWord = false;
+        this.partialWord = true;
         this.maxWeight = maxWeight;
         this.existsWeight = existsWeight;
     }

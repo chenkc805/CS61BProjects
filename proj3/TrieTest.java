@@ -85,7 +85,7 @@ public class TrieTest {
         assertTrue(t.find("two words", true));
         t.insert("TWO");
         assertTrue(t.find("TWO", true));
-        assertFalse(t.find("TWO", false));
+        assertTrue(t.find("TWO", false));
         assertFalse(t.find("two", true));
         assertFalse(t.find("twO", true));
     }
@@ -103,13 +103,8 @@ public class TrieTest {
         assertTrue(t.find("two", false));
         assertTrue(t.find("two ", true));
         assertTrue(t.find("two words", true));
-        t.insert("TWO");
-        assertTrue(t.find("TWO", true));
-        assertFalse(t.find("TWO", false));
-        assertFalse(t.find("two", true));
-        assertFalse(t.find("twO", true));
         t.insert("TWO!!");
-        assertTrue(t.find("TWO", true));
+        assertTrue(t.find("TWO", false));
         assertTrue(t.find("TWO!!", true));
     }
 

@@ -13,6 +13,8 @@ public class Trie {
      * A private class for each node in the Trie 
      */
     private class Node {
+        boolean fullWord;
+        boolean partialWord;
         boolean exists;
         Node[] links;
 
@@ -23,7 +25,8 @@ public class Trie {
          */
         public Node() {
             links = new Node[R];
-            exists = false;
+            partialWord = false;
+            fullWord = false;
         }
     }
 
@@ -53,7 +56,11 @@ public class Trie {
             return false;
         }
         if (d == s.length()) {
-            return x.exists == isFullWord;
+            if (isFullWord) {
+                return x.fullWord == isFullWord;
+            } else {
+                return x.partialWord != isFullWord;
+            }
         }
         char c = s.charAt(d);
         return find(x.links[c], s, isFullWord, d + 1);
@@ -82,10 +89,11 @@ public class Trie {
             x = new Node();
         }
         if (d == s.length()) {
-            x.exists = true;
+            x.fullWord = true;
         } else {
             char c = s.charAt(d);
             x.links[c] = insert(x.links[c], s, d + 1);
+            x.partialWord = true;
         }
         return x;
     }

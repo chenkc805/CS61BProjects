@@ -72,7 +72,13 @@ public class AlphabetSort {
         }
     }
 
+    /**
+     *  Removes strings from an array that do not fit the specifications of the alphabet 
+     *  @param a The array to remove strings from
+     *  @param d The index of the character of each string in A that we are checking
+     */
     private static void remove(String[] a, int d) {
+        // System.out.println("INDEX D: " + d + " AND ARRAY: " + Arrays.toString(a));
         if (d > maxLength) {
             return;
         }
@@ -84,13 +90,15 @@ public class AlphabetSort {
         }
         String[] newArray = new String[n.size()];
         toSort = n.toArray(newArray);
-        remove(toSort, d+1);
+        remove(toSort, d + 1);
     }
 
-    private static void getLengthLongestString(String[] a)
-    {
+    /**
+     *  Sets the longest length of a string in String[] A to maxLength
+     *  @param a The array to scan through
+     */
+    private static void getLengthLongestString(String[] a) {
         maxLength = 0;
-        String longestString = null;
         for (String s : a) {
             if (s.length() > maxLength) {
                 maxLength = s.length();
