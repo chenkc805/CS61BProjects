@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class WeightedTrie {
 
-    final int R = 255;
+    final int R = 400;
     Node root = new Node();
     private int size;
 
@@ -85,6 +85,7 @@ public class WeightedTrie {
         } else {
             char c = s.charAt(d);
             x.partialWord = true;
+            c = resize(c);
             x.links[c] = insert(x.links[c], s, d + 1, weight);
         }
         if (x.maxWeight < weight) {
@@ -95,5 +96,35 @@ public class WeightedTrie {
 
     public int size() {
         return size;
+    }
+
+    public char resize(char c) {
+        if (c == 8217) {
+            c = 256;
+        } else if (c == 304) {
+            c = 257;
+        } else if (c == 7891) {
+            c = 258;
+        } else if (c == 363) {
+            c = 259;
+        } else if (c == 351) {
+            c = 260;
+        } else if (c == 332) {
+            c = 261;
+        } else if (c == 7779) {
+            c = 262;
+        } else if (c == 333) {
+            c = 263;
+        } else if (c == 7720) {
+            c = 264;
+        }
+        // } else if {
+            
+        // } else if {
+            
+        // } else if {
+            
+        // }
+        return c;
     }
 }

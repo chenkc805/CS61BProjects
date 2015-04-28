@@ -1,5 +1,5 @@
 public class Node {
-    private final int R = 255;
+    private final int R = 400;
     boolean fullWord;
     boolean partialWord;
     Node[] links;
