@@ -1,3 +1,4 @@
+import java.util.Arrays;
 /**
  * Prefix-Trie. Supports linear time find() and insert(). 
  * Should support determining whether a word is a full word in the 
@@ -16,7 +17,7 @@ public class WeightedTrie {
     }
 
     public boolean find(String s, boolean isFullWord) {
-        if (s.equals("") || s == null) {
+        if (s == null || s.equals("")) {
             throw new IllegalArgumentException();
         }
         return find(root, s, isFullWord, 0);
@@ -34,13 +35,13 @@ public class WeightedTrie {
             }
         }
         char c = s.charAt(d);
-        return find(x.links[c], s, isFullWord, d+1);
+        return find(x.links[c], s, isFullWord, d + 1);
     }
 
 
 
     public Node get(String s, boolean isFullWord) {
-        if (s.equals("") || s == null) {
+        if (s == null || s.equals("")) {
             throw new IllegalArgumentException();
         }
         if (find(root, s, isFullWord, 0)) {
@@ -62,7 +63,7 @@ public class WeightedTrie {
             }
         }
         char c = s.charAt(d);
-        return get(x.links[c], s, isFullWord, d+1);
+        return get(x.links[c], s, isFullWord, d + 1);
     }
 
     public void insert(String s, double weight) {
@@ -74,21 +75,20 @@ public class WeightedTrie {
     }
 
     private Node insert(Node x, String s, int d, double weight) {
-        if (x == null && d != s.length()) {
-            String c = String.valueOf(s.charAt(d));
-            x = new Node(c, weight);
+        if (x == null) {
+            x = new Node();
         }
         if (d == s.length()) {
             x.fullWord = true;
-            x.maxWeight = weight;
+            x.partialWord = false;
             x.existsWeight = weight;
         } else {
-            if (x.maxWeight < weight) {
-                x.maxWeight = weight;
-            }
             char c = s.charAt(d);
-            x.links[c] = insert(x.links[c], s, d+1, weight);
             x.partialWord = true;
+            x.links[c] = insert(x.links[c], s, d + 1, weight);
+        }
+        if (x.maxWeight < weight) {
+            x.maxWeight = weight;
         }
         return x;
     }

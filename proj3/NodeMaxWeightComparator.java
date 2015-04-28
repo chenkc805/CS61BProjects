@@ -8,10 +8,10 @@ import java.util.Comparator;
 public class NodeMaxWeightComparator implements Comparator<Node>{
 
     public int compare(Node n1, Node n2) {
-        if (n1.maxWeight < n2.maxWeight) {
+        if (n1.maxWeight > n2.maxWeight) {
             return -1;
         }
-        if (n1.maxWeight > n2.maxWeight) {
+        if (n1.maxWeight < n2.maxWeight) {
             return 1;
         }
         return 0;

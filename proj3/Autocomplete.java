@@ -2,6 +2,9 @@ import java.util.PriorityQueue;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.Map;
 
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
@@ -11,7 +14,10 @@ public class Autocomplete {
 
     private WeightedTrie trie;
     private PriorityQueue<Node> pq;
-    private PriorityQueue<String> _topMatches;
+    private ArrayList<String> iterableTopMatches;
+    //private ArrayList<String> iterableTopMatches;
+    private ArrayList<String> allMatches;
+    //private ArrayList<String> allMatches;
     private static final int SIZE_OF_PQ = 11;
     private static final NodeMaxWeightComparator COMPARATOR = new NodeMaxWeightComparator();
     /**
@@ -30,9 +36,11 @@ public class Autocomplete {
                 trie.clear();
                 throw new IllegalArgumentException();
             }
+            System.out.println(terms[i]);
             trie.insert(terms[i], weights[i]);
         }
         pq = new PriorityQueue<Node>(SIZE_OF_PQ, COMPARATOR);
+        allMatches = new ArrayList<String>();
     }
 
     /**
@@ -41,7 +49,7 @@ public class Autocomplete {
      * @return weight of the given term.
      */
     public double weightOf(String term) {
-        if (trie.find(term, true) && trie.get(term, true) != null) {
+        if (trie.find(term, true)) {
             return trie.get(term, true).existsWeight;
         } else {
             return 0.0;
@@ -65,27 +73,31 @@ public class Autocomplete {
      * @return the top match string
      */
     private String topMatch(Node n, String prefix, double max) {
-        if (n.existsWeight == max) {
-            return prefix;
-        }
-        if (trie.find(prefix, false) && trie.get(prefix, false) != null) {
-            Node curr = trie.get(prefix, false);
-            double weight = curr.maxWeight;
-            double topMatchDouble = 0.0;
-            Node topNode = null;
-            Node[] nodes = curr.links;
-            for (int i = 0; i < trie.R; i++) {
-                if (nodes[i] != null) {
-                    if (nodes[i].maxWeight == weight) {
-                        topNode = nodes[i];
-                        break;
-                    }  
-                }
-            }
-            return topMatch(topNode, prefix + topNode.character, max);
+        Node curr = null;
+        if (trie.find(prefix, false)) {
+            curr = trie.get(prefix, false);
+        } else if (trie.find(prefix, true)) {
+            curr = trie.get(prefix, true);
         } else {
+            System.out.println("No top matches for this prefix.");
             return null;
         }
+        if (curr.existsWeight == curr.maxWeight) {
+            return prefix;
+        }
+        double weight = curr.maxWeight;
+        double topMatchDouble = 0.0;
+        Node topNode = null;
+        Node[] nodes = curr.links;
+        for (int i = 0; i < trie.R; i++) {
+            if (nodes[i] != null) {
+                if (nodes[i].maxWeight == weight) {
+                    topNode = nodes[i];
+                    break;
+                }  
+            }
+        }
+        return topMatch(topNode, prefix + Character.toString((char) Arrays.asList(nodes).indexOf(topNode)), topNode.maxWeight);
     }
 
     /**
@@ -99,42 +111,55 @@ public class Autocomplete {
         if (k < 0) {
             throw new IllegalArgumentException();
         }
-        Node curr = trie.get(prefix, false);
-        topMatches(curr, prefix, k, curr.maxWeight);
-        PriorityQueue<String> result = new PriorityQueue<String>(_topMatches);
-        _topMatches.clear();
-        return result;
+        TreeMap<Double, String> treeTopMatches = new TreeMap<Double, String>();
+        ArrayList<String> iterableTopMatches = new ArrayList<String>();
+        findAll(prefix);
+        for (String word : allMatches) {
+            treeTopMatches.put(weightOf(word), word);
+        }
+        allMatches.clear();
+        while (k > 0) {
+            Map.Entry<Double, String> x = treeTopMatches.pollLastEntry();
+            if (x == null) {
+                break;
+            }
+            iterableTopMatches.add(x.getValue());
+            k--;
+        }
+        return iterableTopMatches;
 
     }
 
     /**
-     * Helper method for finding the topMatches
-     * @param x the Node we are currently on
-     * @param prefix is the prefix we are searching through
-     * @param k Number of results to return 
-     * @param weight the maxWeight of the prefix
+     * Returns all words in the dictionary with the given prefix, sorted by weight.
+     * @param prefix The prefix to look through
      */
-    private void topMatches(Node x, String prefix, int k, double weight) {
-        if (x == null) {
+    private void findAll(String prefix) {
+        findAll(trie.get(prefix, false), prefix, false);
+        findAll(trie.get(prefix, true), prefix, true);
+    }
+
+    /**
+     * Returns all words in the dictionary with the given prefix, sorted by weight.
+     * @param n the node that we are currently looking through
+     * @param prefix The prefix to look through
+     */
+    private void findAll(Node n, String prefix, boolean isFullWord) {
+        if (n == null) {
             return;
         }
-        if (x.fullWord) {
-            _topMatches.add(prefix);
-            k--;
+        if (n.fullWord) {
+            allMatches.add(prefix);
         }
-        if (k == 0) {
-            return;
+        Node curr = trie.get(prefix, false);
+        if (curr != null) {
+            for (int i = 0; i < trie.R; i++) {
+                Node x = curr.links[i];
+                if (x != null) {
+                    findAll(x, prefix + Character.toString((char) i), isFullWord);
+                }
+            }
         }
-        Node[] nodes = x.links;
-        for (int i = 0; i < nodes.length; i++) {
-            pq.add(nodes[i]);
-        }
-        Node first = pq.poll();
-        Node second = pq.poll();
-        Node third = pq.poll();
-        topMatches(first, prefix + first.character, k, weight);
-        topMatches(second, prefix + second.character, k, weight);
-        topMatches(third, prefix + third.character, k, weight);
     }
 
     /**
@@ -170,13 +195,13 @@ public class Autocomplete {
 
         Autocomplete autocomplete = new Autocomplete(terms, weights);
 
-        // process queries from standard input
+        //process queries from standard input
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
             String prefix = StdIn.readLine();
             for (String term : autocomplete.topMatches(prefix, k)) {
                 StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);
-            }
+           }
         }
     }
 }
