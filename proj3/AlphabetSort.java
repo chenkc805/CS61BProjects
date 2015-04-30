@@ -49,7 +49,6 @@ public class AlphabetSort {
      *  @param d The character that we are currently at as we interate through strings.
      */
     private static void sortMSD(String[] a, int low, int high, int d) { 
-
         if (high < low + 2) {
             insertion(a, low, high, d);
             return;
@@ -110,15 +109,15 @@ public class AlphabetSort {
      *  @return bool true depending on if the dth character in v is less than or equal to
      *          the dth character in w. 
      */
-    private static boolean less(String v, String w, int d) {
+    private static boolean less(String s, String t, int d) {
         for (int i = d; i < Math.min(v.length(), w.length()); i++) {
-            if (charAt(v, i) <= charAt(w, i)) {
+            if (charAt(s, i) <= charAt(t, i)) {
                 return true;
-            } else if (charAt(w, i) > charAt(w, i)) {
+            } else if (charAt(s, i) > charAt(t, i)) {
                 return false;
             }
         }
-        return v.length() < w.length();
+        return s.length() < t.length();
     }
 
     /**
