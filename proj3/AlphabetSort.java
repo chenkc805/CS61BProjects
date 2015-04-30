@@ -37,9 +37,8 @@ public class AlphabetSort {
      *  @param a The array of strings to be sorted
      */
     public static void sortMSD(String[] a) {
-        int N = a.length;
-        temp = new String[N];
-        sortMSD(a, 0, N - 1, 0);
+        temp = new String[a.length];
+        sortMSD(a, 0, a.length - 1, 0);
     }
 
     /**
@@ -50,14 +49,16 @@ public class AlphabetSort {
      *  @param d The character that we are currently at as we interate through strings.
      */
     private static void sortMSD(String[] a, int low, int high, int d) { 
-        if (high <= low + 1) {
+
+        if (high < low + 2) {
+            insertion(a, low, high, d);
             return;
-        } 
+        }
         int[] count = new int[R + 2];       
         for (int i = low; i <= high; i++) {
             count[charAt(a[i], d) + 2]++;
         }
-        for (int i = 0; i < R + 1; i++) {     
+        for (int i = 0; i <= R; i++) {     
             count[i + 1] += count[i];
         }
         for (int i = low; i <= high; i++) {   
@@ -70,6 +71,54 @@ public class AlphabetSort {
         for (int i = 0; i < R; i++) {
             sortMSD(a, low + count[i], low + count[i + 1] - 1, d + 1);
         }
+    }
+
+    /**
+     *  Insertion sort algorithm 
+     *  @param a The array of strings to be sorted
+     *  @param low The lower index of array to begin at
+     *  @param high The higher index of array to end at
+     *  @param d The character that we are currently at as we interate through strings.
+     */
+    private static void insertion(String[] a, int low, int high, int d) {
+        for (int i = low; i <= high; i++) {
+            for (int j = i; j > low; j--) {
+                if  (less(a[j], a[j - 1], d)) {
+                    exch(a, j, j - 1);
+                }
+            }
+        }
+    }
+
+    /**
+     *  Exchange a[i] and a[j]
+     *  @param a The array of strings to be exchanged
+     *  @param i the index of first string to be exchanged
+     *  @param j the index of second string to be exchanged with i
+     */
+    private static void exch(String[] a, int i, int j) {
+        String tempString = a[i];
+        a[i] = a[j];
+        a[j] = tempString;
+    }
+
+    /**
+     *  Checks if a character is less than or greater than another character.
+     *  @param v the first string to compare
+     *  @param w the second string to compare
+     *  @param d in the index of the character being checked
+     *  @return bool true depending on if the dth character in v is less than or equal to
+     *          the dth character in w. 
+     */
+    private static boolean less(String v, String w, int d) {
+        for (int i = d; i < Math.min(v.length(), w.length()); i++) {
+            if (charAt(v, i) <= charAt(w, i)) {
+                return true;
+            } else if (charAt(w, i) > charAt(w, i)) {
+                return false;
+            }
+        }
+        return v.length() < w.length();
     }
 
     /**
@@ -135,7 +184,7 @@ public class AlphabetSort {
             getLengthLongestString(toSort);
             remove(toSort, 0);
             sortMSD(toSort);
-            for (int i = 0; i < toSort.length ; i++) {
+            for (int i = 0; i < toSort.length; i++) {
                 System.out.println(toSort[i]);
             }
 

@@ -216,47 +216,4 @@ public class TST {
         prefix.deleteCharAt(prefix.length() - 1);
         collect(x.right, prefix, queue);
     }
-
-    /**
-     * Returns all of the keys in the set that start with <tt>prefix</tt>.
-     * @param prefix the prefix
-     * @return all of the keys in the set that start with <tt>prefix</tt>,
-     *     as an iterable
-     */
-    // public Iterable<String> keysWithPrefixPQ(String prefix) {
-    //     Queue<String> queue = new Queue<String>();
-    //     TSTNode x = null;
-    //     if (prefix == null || prefix.length() == 0) x = root;
-    //     else                                        x = get(root, prefix, 0);
-    //     if (x == null) return queue;
-    //     if (x.val != -1) queue.enqueue(prefix);
-    //     collectPQ(x.mid, new StringBuilder(prefix), queue);
-    //     return queue;
-    // }
-
-    // // all keys in subtrie rooted at x with given prefix
-    // private void collectPQ(TSTNode x, StringBuilder prefix, Queue<String> queue) {
-    //     if (x == null || k == 0) return;
-    //     StringBuilder middle = new StringBuilder(prefix.append(x.c));
-    //     prefix.deleteCharAt(prefix.length() - 1);
-    //     TSTNode node = pqNodes.peek();
-    //     if (node != null) { 
-    //         if (x.val > node.maxVal) {
-    //             System.out.println("Insert: " + prefix.toString() + x.c);
-    //             queue.enqueue(prefix.toString() + x.c);
-    //             k--;
-    //         }
-    //     }
-    //     if (k == 0) return;
-    //     if (x.val == x.maxVal) { 
-    //         queue.enqueue(prefix.toString());
-    //         k--;
-    //     }
-    //     if (x.left != null)     pqNodes.add(x.left);
-    //     if (x.right != null)    pqNodes.add(x.right);
-    //     if (x.mid != null)      pqNodes.add(x.mid);
-    //     TSTNode pollNode = pqNodes.poll();
-    //     if (pollNode == x.mid)  collectPQ(pollNode, middle, queue);
-    //     else                    collectPQ(pollNode, prefix, queue); 
-    // }
 }
