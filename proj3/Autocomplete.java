@@ -1,6 +1,5 @@
 import java.util.PriorityQueue;
 import java.util.LinkedList;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 /**
@@ -55,7 +54,6 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
-        trie.k = 1;
         return trie.getTopMatches(prefix).poll().getString();
     }
 
@@ -67,7 +65,9 @@ public class Autocomplete {
      * @return Iterable of the top k terms with prefix.
      */
     public Iterable<String> topMatches(String prefix, int k) {
-        if (k < 1) throw new IllegalArgumentException();
+        if (k < 1) {
+            throw new IllegalArgumentException();
+        }
         ArrayList<String> iterableTopMatches = new ArrayList<String>();
         PriorityQueue<StringNode> top = trie.getTopMatches(prefix);
         while (k > 0) {

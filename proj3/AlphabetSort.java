@@ -121,7 +121,7 @@ public class AlphabetSort {
             }
             HashSet<Character> alphabetSet = new HashSet<Character>(alphabet);
             input = in.readLine();
-            if (input.equals("") || alphabetSet.size() < alphabet.size()) {
+            if (input == null || input.equals("") || alphabetSet.size() < alphabet.size()) {
                 throw new IllegalArgumentException();
             }
             ArrayList<String> toSortArrayList = new ArrayList<String>();
@@ -132,11 +132,12 @@ public class AlphabetSort {
             Object[] toSortObject = toSortArrayList.toArray();
             toSort = Arrays.copyOf(toSortObject, toSortObject.length, String[].class);
 
-            //System.out.println(Arrays.toString(toSort));
             getLengthLongestString(toSort);
             remove(toSort, 0);
             sortMSD(toSort);
-            //System.out.println(Arrays.toString(toSort));
+            for (int i = 0; i < toSort.length ; i++) {
+                System.out.println(toSort[i]);
+            }
 
         } catch (IOException io) {
             io.printStackTrace();
