@@ -1,10 +1,7 @@
 import java.util.PriorityQueue;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.Map;
 
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
@@ -19,21 +16,18 @@ public class Autocomplete {
     private ArrayList<String> allMatches;
 
     //private ArrayList<String> allMatches;
-    private static final int SIZE_OF_PQ = 11;
-    private static final TSTNodeMaxWeightComparator COMPARATOR = new TSTNodeMaxWeightComparator();
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
-        HashSet<String> checkDuplicates = new HashSet<String>(Arrays.asList(terms));
-        if (terms.length != weights.length || checkDuplicates.size() != terms.length) {
+        if (terms.length != weights.length) {
             throw new IllegalArgumentException();
         }
         trie = new TST();
         for (int i = 0; i < terms.length; i++) {
-            if (weights[i] < 0) {
+            if (weights[i] < 0 || trie.contains(terms[i])) {
                 trie.clear();
                 throw new IllegalArgumentException();
             }
@@ -61,6 +55,7 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        trie.k = 1;
         return trie.getTopMatches(prefix).poll().getString();
     }
 
@@ -72,6 +67,7 @@ public class Autocomplete {
      * @return Iterable of the top k terms with prefix.
      */
     public Iterable<String> topMatches(String prefix, int k) {
+        if (k < 1) throw new IllegalArgumentException();
         ArrayList<String> iterableTopMatches = new ArrayList<String>();
         PriorityQueue<StringNode> top = trie.getTopMatches(prefix);
         while (k > 0) {
@@ -79,6 +75,8 @@ public class Autocomplete {
             if (s != null) {
                 iterableTopMatches.add(s.getString());
                 k--;
+            } else {
+                break;
             }
         }
         return iterableTopMatches;
@@ -123,7 +121,7 @@ public class Autocomplete {
             String prefix = StdIn.readLine();
             for (String term : autocomplete.topMatches(prefix, k)) {
                 StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);
-           }
+            }
         }
     }
 }

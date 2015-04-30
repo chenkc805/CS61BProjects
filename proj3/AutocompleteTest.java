@@ -26,6 +26,7 @@ public class AutocompleteTest {
         assertEquals("of", autocomplete.topMatch("o"));
         assertEquals("and", autocomplete.topMatch("a"));
         assertEquals("another", autocomplete.topMatch("anot"));
+        assertEquals("Gutenberg", autocomplete.topMatch("Gu"));
         assertEquals("mother", autocomplete.topMatch("mot"));
         assertEquals("Gutenberg", autocomplete.topMatch("Gu"));
         assertEquals("together", autocomplete.topMatch("tog"));

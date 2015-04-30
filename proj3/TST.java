@@ -34,21 +34,18 @@ import java.util.Map;
  */
 public class TST {
     private int N;              // size
-    private Node root;   // root of TST
+    private TSTNode root;          // root of TST
     private static final int SIZE_OF_PQ = 11;
-    private final TSTNodeMaxWeightComparator COMPARATOR = new TSTNodeMaxWeightComparator();
-    //private PriorityQueue<StringNode> pq;
-
-    private static class Node {
-        private char c;                        // character
-        private Node left, mid, right;  // left, middle, and right subtries
-        public double val;                     // value associated with string
-    }
+    private final StringNodeComparator STRING_NODE_COMPARATOR = new StringNodeComparator();
+    private final NodeComparator NODE_COMPARATOR = new NodeComparator();
+    private PriorityQueue<TSTNode> pqNodes;
+    public int k;
 
     /**
      * Initializes an empty string symbol table.
      */
     public TST() {
+        pqNodes = new PriorityQueue<TSTNode>(SIZE_OF_PQ, NODE_COMPARATOR);
     }
 
     public void clear() {
@@ -57,6 +54,7 @@ public class TST {
         root.mid = null;
         root.c = '\u0000';
         root.val = -1;
+        root.maxVal = -1;
     }
 
     /**
@@ -75,6 +73,7 @@ public class TST {
      * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      */
     public boolean contains(String key) {
+        if (key == null || key.length() == 0) throw new IllegalArgumentException();
         return get(key) != -1;
     }
 
@@ -86,17 +85,13 @@ public class TST {
      * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      */
     public double get(String key) {
-        if (key == null) throw new NullPointerException();
-        if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
-        Node x = get(root, key, 0);
+        TSTNode x = get(root, key, 0);
         if (x == null) return -1;
         return x.val;
     }
 
     // return subtrie corresponding to given key
-    private Node get(Node x, String key, int d) {
-        if (key == null) throw new NullPointerException();
-        if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
+    private TSTNode get(TSTNode x, String key, int d) {
         if (x == null) return null;
         char c = key.charAt(d);
         if      (c < x.c)              return get(x.left,  key, d);
@@ -114,20 +109,26 @@ public class TST {
      * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      */
     public void put(String key, double val) {
+        if (key == null || key.length() == 0) throw new IllegalArgumentException();
         if (!contains(key)) N++;
         root = put(root, key, val, 0);
     }
 
-    private Node put(Node x, String key, double val, int d) {
+    private TSTNode put(TSTNode x, String key, double val, int d) {
+        if (key == null || key.length() == 0) throw new IllegalArgumentException();
         char c = key.charAt(d);
         if (x == null) {
-            x = new Node();
+            x = new TSTNode();
             x.c = c;
+            x.maxVal = val;
+        }
+        if (x.maxVal < val) {
+            x.maxVal = val;
         }
         if      (c < x.c)               x.left  = put(x.left,  key, val, d);
         else if (c > x.c)               x.right = put(x.right, key, val, d);
         else if (d < key.length() - 1)  x.mid   = put(x.mid,   key, val, d+1);
-        else                            x.val   = val;
+        else                            x.val   = val; 
         return x;
     }
 
@@ -142,7 +143,7 @@ public class TST {
     public String longestPrefixOf(String query) {
         if (query == null || query.length() == 0) return null;
         int length = 0;
-        Node x = root;
+        TSTNode x = root;
         int i = 0;
         while (x != null && i < query.length()) {
             char c = query.charAt(i);
@@ -158,12 +159,23 @@ public class TST {
     }
 
     public PriorityQueue<StringNode> getTopMatches(String prefix) {
-        PriorityQueue<StringNode> pq = new PriorityQueue<StringNode>(SIZE_OF_PQ, COMPARATOR);
-        for (String s : keysWithPrefix(prefix)) {
-            double key = get(s);
-            if (key > 0) {
-                StringNode insert = new StringNode(key, s);
-                pq.add(insert);
+        PriorityQueue<StringNode> pq = 
+            new PriorityQueue<StringNode>(SIZE_OF_PQ, STRING_NODE_COMPARATOR);
+        if (prefix.length() == 0 || prefix == null) {
+            for (String s : keys()) {
+                double key = get(s);
+                if (key > 0) {
+                    StringNode insert = new StringNode(key, s);
+                    pq.add(insert);
+                }
+            }
+        } else {
+            for (String s : keysWithPrefix(prefix)) {
+                double key = get(s);
+                if (key > 0) {
+                    StringNode insert = new StringNode(key, s);
+                    pq.add(insert);
+                }
             }
         }
         return pq;
@@ -189,7 +201,7 @@ public class TST {
      */
     public Iterable<String> keysWithPrefix(String prefix) {
         Queue<String> queue = new Queue<String>();
-        Node x = get(root, prefix, 0);
+        TSTNode x = get(root, prefix, 0);
         if (x == null) return queue;
         if (x.val != -1) queue.enqueue(prefix);
         collect(x.mid, new StringBuilder(prefix), queue);
@@ -197,7 +209,7 @@ public class TST {
     }
 
     // all keys in subtrie rooted at x with given prefix
-    private void collect(Node x, StringBuilder prefix, Queue<String> queue) {
+    private void collect(TSTNode x, StringBuilder prefix, Queue<String> queue) {
         if (x == null) return;
         collect(x.left,  prefix, queue);
         if (x.val != -1) queue.enqueue(prefix.toString() + x.c);
@@ -206,31 +218,46 @@ public class TST {
         collect(x.right, prefix, queue);
     }
 
-
     /**
-     * Returns all of the keys in the symbol table that match <tt>pattern</tt>,
-     * where . symbol is treated as a wildcard character.
-     * @param pattern the pattern
-     * @return all of the keys in the symbol table that match <tt>pattern</tt>,
-     *     as an iterable, where . is treated as a wildcard character.
+     * Returns all of the keys in the set that start with <tt>prefix</tt>.
+     * @param prefix the prefix
+     * @return all of the keys in the set that start with <tt>prefix</tt>,
+     *     as an iterable
      */
-    public Iterable<String> keysThatMatch(String pattern) {
+    public Iterable<String> keysWithPrefixPQ(String prefix) {
         Queue<String> queue = new Queue<String>();
-        collect(root, new StringBuilder(), 0, pattern, queue);
+        TSTNode x = null;
+        if (prefix == null || prefix.length() == 0) x = root;
+        else                                        x = get(root, prefix, 0);
+        if (x == null) return queue;
+        if (x.val != -1) queue.enqueue(prefix);
+        collectPQ(x.mid, new StringBuilder(prefix), queue);
         return queue;
     }
- 
-    private void collect(Node x, StringBuilder prefix, int i, String pattern, Queue<String> queue) {
-        if (x == null) return;
-        char c = pattern.charAt(i);
-        if (c == '.' || c < x.c) collect(x.left, prefix, i, pattern, queue);
-        if (c == '.' || c == x.c) {
-            if (i == pattern.length() - 1 && x.val != -1) queue.enqueue(prefix.toString() + x.c);
-            if (i < pattern.length() - 1) {
-                collect(x.mid, prefix.append(x.c), i+1, pattern, queue);
-                prefix.deleteCharAt(prefix.length() - 1);
+
+    // all keys in subtrie rooted at x with given prefix
+    private void collectPQ(TSTNode x, StringBuilder prefix, Queue<String> queue) {
+        if (x == null || k == 0) return;
+        StringBuilder middle = new StringBuilder(prefix.append(x.c));
+        prefix.deleteCharAt(prefix.length() - 1);
+        TSTNode node = pqNodes.peek();
+        if (node != null) { 
+            if (x.val > node.maxVal) {
+                System.out.println("Insert: " + prefix.toString() + x.c);
+                queue.enqueue(prefix.toString() + x.c);
+                k--;
             }
         }
-        if (c == '.' || c > x.c) collect(x.right, prefix, i, pattern, queue);
+        if (k == 0) return;
+        if (x.val == x.maxVal) { 
+            queue.enqueue(prefix.toString());
+            k--;
+        }
+        if (x.left != null)     pqNodes.add(x.left);
+        if (x.right != null)    pqNodes.add(x.right);
+        if (x.mid != null)      pqNodes.add(x.mid);
+        TSTNode pollNode = pqNodes.poll();
+        if (pollNode == x.mid)  collectPQ(pollNode, middle, queue);
+        else                    collectPQ(pollNode, prefix, queue); 
     }
 }
