@@ -110,7 +110,7 @@ public class AlphabetSort {
      *          the dth character in w. 
      */
     private static boolean less(String s, String t, int d) {
-        for (int i = d; i < Math.min(v.length(), w.length()); i++) {
+        for (int i = d; i < Math.min(s.length(), t.length()); i++) {
             if (charAt(s, i) <= charAt(t, i)) {
                 return true;
             } else if (charAt(s, i) > charAt(t, i)) {
