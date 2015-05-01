@@ -82,8 +82,8 @@ public class AlphabetSort {
     private static void insertion(String[] a, int low, int high, int d) {
         for (int i = low; i <= high; i++) {
             for (int j = i; j > low; j--) {
-                if  (less(a[j], a[j - 1], d)) {
-                    exch(a, j, j - 1);
+                if  (more(a[j], a[j - 1], d)) {
+                    exch(a, j - 1, j);
                 }
             }
         }
@@ -103,21 +103,21 @@ public class AlphabetSort {
 
     /**
      *  Checks if a character is less than or greater than another character.
-     *  @param v the first string to compare
-     *  @param w the second string to compare
+     *  @param s the first string to compare
+     *  @param t the second string to compare
      *  @param d in the index of the character being checked
      *  @return bool true depending on if the dth character in v is less than or equal to
      *          the dth character in w. 
      */
-    private static boolean less(String s, String t, int d) {
-        for (int i = d; i < Math.min(s.length(), t.length()); i++) {
-            if (charAt(s, i) <= charAt(t, i)) {
+    private static boolean more(String s, String t, int d) {
+        for (int i = d; i < Math.max(s.length(), t.length()); i++) {
+            if (charAt(s, i) > charAt(t, i)) {
                 return true;
-            } else if (charAt(s, i) > charAt(t, i)) {
+            } else if (charAt(s, i) <= charAt(t, i)) {
                 return false;
             }
         }
-        return s.length() < t.length();
+        return s.length() > t.length();
     }
 
     /**
@@ -126,7 +126,6 @@ public class AlphabetSort {
      *  @param d The index of the character of each string in A that we are checking
      */
     private static void remove(String[] a, int d) {
-        // System.out.println("INDEX D: " + d + " AND ARRAY: " + Arrays.toString(a));
         if (d > maxLength) {
             return;
         }
